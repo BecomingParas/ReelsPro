@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "imagekit": "^6.0.0",
+    "imagekitio-next": "^1.0.1",
     "mongoose": "^8.9.6",
     "next": "15.1.6",
     "next-auth": "^4.24.11",
