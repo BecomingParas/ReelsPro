@@ -24,7 +24,9 @@ function page() {
         setError("Registration failed");
       }
       router.push("/login");
-    } catch (error) {}
+    } catch (error) {
+      setError("you");
+    }
   };
 
   return <div>page</div>;
