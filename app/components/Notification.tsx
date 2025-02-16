@@ -1,16 +1,63 @@
 "use client";
-import Link from "next/link";
-import { Home } from "lucide-react";
-export default function Header() {
+import { createContext, ReactNode, useContext, useState } from "react";
+type NotificationType = "success" | "error" | "warning" | "info";
+interface NotificationContextType {
+  showNotification: (message: string, type: NotificationType) => void;
+}
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined
+);
+export function NotificationProvider({ children }: { children: ReactNode }) {
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: NotificationType;
+    id: number;
+  } | null>(null);
+  // Function to show notifications
+  const showNotification = (message: string, type: NotificationType) => {
+    const id = Date.now();
+    setNotification({ message, type, id });
+    // Auto-hide notification after 3 seconds
+    setTimeout(() => {
+      setNotification((current) => (current?.id === id ? null : current));
+    }, 3000);
+  };
   return (
-    <div className=" navbar bg-base-300 sticky top-0 z-40">
-      <div className=" container mx-auto">
-        <div className="flex-1 px-2 lg:flex-none">
-          <Link>
-            <Home className="w-5 h-5" />
-          </Link>
+    <NotificationContext.Provider value={{ showNotification }}>
+      {children}
+      {notification && (
+        <div className="toast toast-bottom toast-end z-[100]">
+          <div className={`alert ${getAlertClass(notification.type)}`}>
+            <span>{notification.message}</span>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </NotificationContext.Provider>
   );
+}
+
+// Function to get alert class based on notification type
+function getAlertClass(type: NotificationType): string {
+  switch (type) {
+    case "success":
+      return "alert-success";
+    case "error":
+      return "alert-error";
+    case "warning":
+      return "alert-warning";
+    case "info":
+      return "alert-info";
+    default:
+      return "alert-info";
+  }
+}
+// custom hook for accessing notifications
+export function useNotification() {
+  const context = useContext(NotificationContext);
+  if (context === undefined) {
+    throw new Error(
+      "useNotification must be used within a NotificationProvider"
+    );
+  }
+  return context;
 }
