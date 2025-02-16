@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import React from "react";
 
 function Header() {
   const { data: session } = useSession();
@@ -11,7 +10,10 @@ function Header() {
     } catch (error) {}
   };
   return (
-    <div>
+    <div className="navbar bg-base-300 sticky top-0 z-40">
+      <div className=" container mx-auto">
+        <div className="flex-1 px-2 lg:flex-none"></div>
+      </div>
       <button onClick={handleSignout}>Signout</button>
       {session ? (
         <div>welcome</div>
