@@ -1,6 +1,8 @@
+"use client";
 import { useEffect, useState } from "react";
 import VideoFeed from "./components/VideoFeed";
 import { IVideo } from "@/models/video";
+import { apiClient } from "@/lib/api-client";
 
 export default function Home() {
   const [videos, setVideos] = useState<IVideo[]>([]);
