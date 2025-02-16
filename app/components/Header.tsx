@@ -12,7 +12,12 @@ function Header() {
   return (
     <div className="navbar bg-base-300 sticky top-0 z-40">
       <div className=" container mx-auto">
-        <div className="flex-1 px-2 lg:flex-none"></div>
+        <div className="flex-1 px-2 lg:flex-none">
+          <Link
+            href="/"
+            className="btn btn-ghost text-xl gap-2 normal-case font-bold"
+          ></Link>
+        </div>
       </div>
       <button onClick={handleSignout}>Signout</button>
       {session ? (
