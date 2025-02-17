@@ -66,6 +66,19 @@ export default function Register() {
             className=" w-full px-3 py-2 border rounded"
           />
         </div>
+        <div>
+          <label htmlFor="confirmPassword" className="block mb-1">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            className="w-full px-3 py-2 border rounded"
+          />
+        </div>
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
