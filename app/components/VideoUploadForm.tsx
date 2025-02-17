@@ -122,7 +122,7 @@ export default function VideoUploadForm() {
             Publishing video...
           </>
         ) : (
-          "Publish Vide"
+          "Publish Video"
         )}
       </button>
     </form>
