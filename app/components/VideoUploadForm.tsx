@@ -2,6 +2,9 @@
 
 import { useForm } from "react-hook-form";
 import { useNotification } from "./Notification";
+import FileUpload from "./FileUpload";
+import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
+import { useState } from "react";
 
 interface VideoFormData {
   title: string;
@@ -10,10 +13,13 @@ interface VideoFormData {
   thumbnailUrl: string;
 }
 export default function VideoUploadForm() {
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { showNotification } = useNotification();
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors },
   } = useForm<VideoFormData>({
     defaultValues: {
@@ -23,9 +29,18 @@ export default function VideoUploadForm() {
       thumbnailUrl: "",
     },
   });
+  const handleUploadSuccess = (response: IKUploadResponse) => {
+    setValue("videoUrl", response.filePath);
+    setValue("thumbnailUrl", response.thumbnailUrl || response.filePath);
+    showNotification("Video uploaded successfully.", "success");
+  };
+  const handleUploadProgress = (progress: number) => {
+    setUploadProgress(progress);
+  };
   const onSubmit = async (data: VideoFormData) => {
     if (!data.videoUrl) {
       showNotification("Please upload a video first.", "error");
+      return;
     }
   };
   return (
@@ -45,7 +60,28 @@ export default function VideoUploadForm() {
           </span>
         )}
       </div>
-      <div className="form-control"></div>
+      <div className="form-control">
+        <label className="label">Description</label>
+        <textarea
+          className={`textarea textarea-bordered h-24 ${
+            errors.description ? "text-error" : ""
+          }`}
+          {...register("description", { required: "Description is required." })}
+        />
+        {errors.description && (
+          <span className="text-error text-sm mt-1">
+            {errors.description.message}
+          </span>
+        )}
+      </div>
+      <div className="form-control">
+        <label className="label">Upload Video</label>
+        <FileUpload
+          fileType="video"
+          onSuccess={handleUploadSuccess}
+          onProgress={handleUploadProgress}
+        />
+      </div>
     </form>
   );
 }
