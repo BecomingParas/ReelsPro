@@ -1,7 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/db";
-import Video, { IVideo } from "@/models/video";
-import { error } from "console";
+import Video, { IVideo } from "@/models/Video";
 
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,7 +33,7 @@ export async function POST(request: NextRequest) {
       !body.title ||
       !body.description ||
       !body.videoUrl ||
-      !body.thubmnailUrl
+      !body.thubnailUrl
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -50,12 +49,14 @@ export async function POST(request: NextRequest) {
         quality: body.transformation?.quality ?? 100,
       },
     };
-    const newVidoo = Video.create(videoData);
+    const newVidoo = await Video.create(videoData);
     return NextResponse.json(newVidoo);
   } catch (error) {
+    console.error("Error fetching videos: ", error);
+
     return NextResponse.json(
       { error: "Failed to create a videos" },
-      { status: 200 }
+      { status: 500 }
     );
   }
 }

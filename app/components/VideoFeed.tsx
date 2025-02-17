@@ -1,4 +1,4 @@
-import { IVideo } from "@/models/video";
+import { IVideo } from "@/models/Video";
 import VideoComponent from "./VideoComponent";
 
 interface VideoFeedProps {

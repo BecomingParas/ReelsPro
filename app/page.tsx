@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import VideoFeed from "./components/VideoFeed";
-import { IVideo } from "@/models/video";
+import { IVideo } from "@/models/Video";
 import { apiClient } from "@/lib/api-client";
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className=" text-3xl font-bold mb-8">Imagekit ReelsPro</h1>
+      <h1 className="text-3xl font-bold mb-8">Imagekit ReelsPro</h1>
       <VideoFeed videos={videos} />
     </main>
   );
