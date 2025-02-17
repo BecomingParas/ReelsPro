@@ -5,12 +5,15 @@ import { useNotification } from "./Notification";
 import FileUpload from "./FileUpload";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
+import { apiClient } from "@/lib/api-client";
 
 interface VideoFormData {
   title: string;
   description: string;
   videoUrl: string;
-  thumbnailUrl: string;
+  thubmnailUrl: string;
 }
 export default function VideoUploadForm() {
   const [loading, setLoading] = useState(false);
@@ -26,12 +29,12 @@ export default function VideoUploadForm() {
       title: "",
       description: "",
       videoUrl: "",
-      thumbnailUrl: "",
+      thubmnailUrl: "",
     },
   });
   const handleUploadSuccess = (response: IKUploadResponse) => {
     setValue("videoUrl", response.filePath);
-    setValue("thumbnailUrl", response.thumbnailUrl || response.filePath);
+    setValue("thubmnailUrl", response.thumbnailUrl || response.filePath);
     showNotification("Video uploaded successfully.", "success");
   };
   const handleUploadProgress = (progress: number) => {
@@ -41,6 +44,24 @@ export default function VideoUploadForm() {
     if (!data.videoUrl) {
       showNotification("Please upload a video first.", "error");
       return;
+    }
+    setLoading(true);
+    try {
+      await apiClient.createVideo(data);
+      showNotification("Video published successfully!", "success");
+      // Reset form after successful submission
+      setValue("title", "");
+      setValue("description", "");
+      setValue("videoUrl", "");
+      setValue("thubmnailUrl", "");
+      setUploadProgress(0);
+    } catch (error) {
+      showNotification(
+        error instanceof Error ? error.message : "Failed to publish video.",
+        "error"
+      );
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -81,7 +102,29 @@ export default function VideoUploadForm() {
           onSuccess={handleUploadSuccess}
           onProgress={handleUploadProgress}
         />
+        {uploadProgress > 0 && (
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+            <div
+              className="bg-primary h-2.5 rounded-full transition-all duration-300"
+              style={{ width: `${uploadProgress}` }}
+            ></div>
+          </div>
+        )}
       </div>
+      <button
+        className="btn btn-primary btn-block"
+        type="submit"
+        disabled={loading || !uploadProgress}
+      >
+        {loading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Publishing video...
+          </>
+        ) : (
+          "Publish Vide"
+        )}
+      </button>
     </form>
   );
 }
