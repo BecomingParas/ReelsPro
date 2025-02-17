@@ -13,7 +13,7 @@ interface VideoFormData {
   title: string;
   description: string;
   videoUrl: string;
-  thubmnailUrl: string;
+  thubnailUrl: string;
 }
 export default function VideoUploadForm() {
   const [loading, setLoading] = useState(false);
@@ -29,13 +29,13 @@ export default function VideoUploadForm() {
       title: "",
       description: "",
       videoUrl: "",
-      thubmnailUrl: "",
+      thubnailUrl: "",
     },
   });
   const handleUploadSuccess = (response: IKUploadResponse) => {
     setValue("videoUrl", response.filePath);
-    setValue("thubmnailUrl", response.thumbnailUrl || response.filePath);
-    showNotification("Video uploaded successfully.", "success");
+    setValue("thubnailUrl", response.thumbnailUrl || response.filePath);
+    showNotification("Video uploaded successfully!", "success");
   };
   const handleUploadProgress = (progress: number) => {
     setUploadProgress(progress);
@@ -53,7 +53,7 @@ export default function VideoUploadForm() {
       setValue("title", "");
       setValue("description", "");
       setValue("videoUrl", "");
-      setValue("thubmnailUrl", "");
+      setValue("thubnailUrl", "");
       setUploadProgress(0);
     } catch (error) {
       showNotification(
@@ -75,9 +75,9 @@ export default function VideoUploadForm() {
           }`}
           {...register("title", { required: "Title is required." })}
         />
-        {errors.description && (
+        {errors.title && (
           <span className="text-error text-sm mt-1">
-            {errors.description.message}
+            {errors.title.message}
           </span>
         )}
       </div>
@@ -106,7 +106,7 @@ export default function VideoUploadForm() {
           <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
             <div
               className="bg-primary h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${uploadProgress}` }}
+              style={{ width: `${uploadProgress}%` }}
             ></div>
           </div>
         )}

@@ -7,7 +7,7 @@ import { Home, User } from "lucide-react";
 function Header() {
   const { data: session } = useSession();
   const { showNotification } = useNotification();
-  const handleSignout = async () => {
+  const handleSignOut = async () => {
     try {
       await signOut();
       showNotification("Signed out successfully", "success");
@@ -25,8 +25,10 @@ function Header() {
             onClick={() =>
               showNotification("Welcome to Imagekit ReelsPro", "info")
             }
+            prefetch={true}
           >
             <Home className="w-5 h-5" />
+            ImageKit ReelsPro
           </Link>
         </div>
         <div className="flex flex-1 justify-end px-2">
@@ -41,7 +43,7 @@ function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="dropdown-content z-[1] shadow-lg bg-blue-100 w-64 mt-4 py-2"
+                className="dropdown-content z-[1] shadow-lg bg-base-100 rounded-box w-64 mt-4 py-2"
               >
                 {session ? (
                   <>
@@ -54,20 +56,20 @@ function Header() {
                     <li>
                       <Link
                         href="/upload"
-                        className="px-4 py-2 hover:bg-blue-200 block w-full"
-                        onClick={() => [
+                        className="px-4 py-2 hover:bg-base-200 block w-full"
+                        onClick={() =>
                           showNotification(
-                            "Welcome to admin Dashboard",
+                            "Welcome to Admin Dashboard.",
                             "info"
-                          ),
-                        ]}
+                          )
+                        }
                       >
                         Video Upload
                       </Link>
                     </li>
                     <li>
                       <button
-                        onClick={handleSignout}
+                        onClick={handleSignOut}
                         className="px-4 py-2 text-error hover:bg-base-200 w-full text-left"
                       >
                         Sign Out
