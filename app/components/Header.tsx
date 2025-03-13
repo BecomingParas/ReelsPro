@@ -12,6 +12,7 @@ function Header() {
       await signOut();
       showNotification("Signed out successfully", "success");
     } catch (error) {
+      console.error("Error:", error);
       showNotification("Failed to sign out", "error");
     }
   };

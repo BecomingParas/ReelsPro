@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import VideoFeed from "./components/VideoFeed";
-import { IVideo } from "@/models/Video";
+import { IVideo } from "@/app/models/Video";
 import { apiClient } from "@/lib/api-client";
 
 export default function Home() {

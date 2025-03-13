@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "./db";
-import User from "@/models/User";
+import User from "@/app/models/User";
 import bcrypt from "bcryptjs";
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
           await connectToDatabase();
           const user = await User.findOne({ email: credentials.email });
           if (!user) {
-            throw new Error("No user found");
+            throw new Error("No user found with this email");
           }
           const isValid = await bcrypt.compare(
             credentials.password,

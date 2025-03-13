@@ -1,9 +1,9 @@
-import { IVideo } from "@/models/Video";
+import { IVideo } from "@/app/models/Video";
 
 export type VideoFormData = Omit<IVideo, "_id">;
 type FetchOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
-  body?: any;
+  body?: Record<string, unknown> | string | FormData;
   headers?: Record<string, string>;
 };
 

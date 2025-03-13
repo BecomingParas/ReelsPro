@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { connectToDatabase } from "@/lib/db";
-import { error } from "console";
-import User from "@/models/User";
+import User from "@/app/models/User";
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Email and password are requirded" },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
@@ -33,6 +31,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    console.error("Error:", error);
     return NextResponse.json(
       { error: "Failed to register User" },
       { status: 500 }
