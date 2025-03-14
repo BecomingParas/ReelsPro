@@ -102,8 +102,11 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name, // Add name if needed
           };
-        } catch (error: any) {
-          throw new Error(error.message || "Authentication failed");
+        } catch (error) {
+          if (error instanceof Error) {
+            throw new Error(error.message || "Authentication failed");
+          }
+          throw new Error("Authentication failed");
         }
       },
     }),
