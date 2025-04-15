@@ -1,32 +1,34 @@
 "use client";
-import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { useNotification } from "./Notification";
-import { Home, User } from "lucide-react";
 
-function Header() {
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { Home, User } from "lucide-react";
+import { useNotification } from "./Notification";
+
+export default function Header() {
   const { data: session } = useSession();
   const { showNotification } = useNotification();
+
   const handleSignOut = async () => {
     try {
       await signOut();
       showNotification("Signed out successfully", "success");
-    } catch (error) {
-      console.error("Error:", error);
+    } catch {
       showNotification("Failed to sign out", "error");
     }
   };
+
   return (
     <div className="navbar bg-base-300 sticky top-0 z-40">
-      <div className=" container mx-auto">
+      <div className="container mx-auto">
         <div className="flex-1 px-2 lg:flex-none">
           <Link
             href="/"
             className="btn btn-ghost text-xl gap-2 normal-case font-bold"
-            onClick={() =>
-              showNotification("Welcome to Imagekit ReelsPro", "info")
-            }
             prefetch={true}
+            onClick={() =>
+              showNotification("Welcome to ImageKit ReelsPro", "info")
+            }
           >
             <Home className="w-5 h-5" />
             ImageKit ReelsPro
@@ -54,20 +56,19 @@ function Header() {
                       </span>
                     </li>
                     <div className="divider my-1"></div>
+
                     <li>
                       <Link
                         href="/upload"
                         className="px-4 py-2 hover:bg-base-200 block w-full"
                         onClick={() =>
-                          showNotification(
-                            "Welcome to Admin Dashboard.",
-                            "info"
-                          )
+                          showNotification("Welcome to Admin Dashboard", "info")
                         }
                       >
                         Video Upload
                       </Link>
                     </li>
+
                     <li>
                       <button
                         onClick={handleSignOut}
@@ -82,9 +83,9 @@ function Header() {
                     <Link
                       href="/login"
                       className="px-4 py-2 hover:bg-base-200 block w-full"
-                      onClick={() => {
-                        showNotification("Please sign in to continue", "info");
-                      }}
+                      onClick={() =>
+                        showNotification("Please sign in to continue", "info")
+                      }
                     >
                       Login
                     </Link>
@@ -98,5 +99,3 @@ function Header() {
     </div>
   );
 }
-
-export default Header;

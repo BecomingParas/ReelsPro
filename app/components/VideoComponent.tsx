@@ -1,6 +1,6 @@
 import { IKVideo } from "imagekitio-next";
 import Link from "next/link";
-import { IVideo } from "@/app/models/Video";
+import { IVideo } from "@/models/Video";
 
 export default function VideoComponent({ video }: { video: IVideo }) {
   return (
@@ -8,7 +8,7 @@ export default function VideoComponent({ video }: { video: IVideo }) {
       <figure className="relative px-4 pt-4">
         <Link href={`/videos/${video._id}`} className="relative group w-full">
           <div
-            className=" rounded-xl overflow-hidden relative w-full"
+            className="rounded-xl overflow-hidden relative w-full"
             style={{ aspectRatio: "9/16" }}
           >
             <IKVideo
@@ -25,6 +25,7 @@ export default function VideoComponent({ video }: { video: IVideo }) {
           </div>
         </Link>
       </figure>
+
       <div className="card-body p-4">
         <Link
           href={`/videos/${video._id}`}
@@ -32,6 +33,7 @@ export default function VideoComponent({ video }: { video: IVideo }) {
         >
           <h2 className="card-title text-lg">{video.title}</h2>
         </Link>
+
         <p className="text-sm text-base-content/70 line-clamp-2">
           {video.description}
         </p>
