@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ImageKit Video Shop
+
+A modern Next.js application for managing and selling video content using ImageKit integration. This project provides a full-featured platform with user authentication, video upload capabilities, and payment processing using Razorpay.
+
+## Features
+
+- 🔐 User Authentication (NextAuth.js)
+- 📹 Video Upload and Management (ImageKit)
+- 💳 Payment Processing (Razorpay)
+- 🎨 Modern UI with Tailwind CSS and DaisyUI
+- 📱 Fully Responsive Design
+- 🔒 Secure API Routes
+- 📧 Email Notifications (Nodemailer)
+- 🗄️ MongoDB Database Integration
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS, DaisyUI
+- **Authentication**: NextAuth.js, JWT
+- **Database**: MongoDB with Mongoose
+- **File Storage**: ImageKit
+- **Payment**: Razorpay
+- **Email**: Nodemailer
+- **Form Handling**: React Hook Form
+
+## Prerequisites
+
+- Node.js (Latest LTS version)
+- MongoDB Database
+- ImageKit Account
+- Razorpay Account
+- SMTP Server (for email notifications)
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd imagekit-video-main
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Fill in the required environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env` file with the following variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+# Database
+MONGODB_URI=
 
-## Deploy on Vercel
+# Authentication
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# ImageKit
+IMAGEKIT_PUBLIC_KEY=
+IMAGEKIT_PRIVATE_KEY=
+IMAGEKIT_URL_ENDPOINT=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Razorpay
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+
+# Email (SMTP)
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build production application
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run seed` - Seed the database
+- `npm run mailtrap` - Test email configuration
+
+## Project Structure
+
+```
+├── app/                  # Next.js app directory
+│   ├── api/             # API routes
+│   ├── components/      # Reusable components
+│   ├── login/          # Login page
+│   ├── register/       # Registration page
+│   └── upload/         # Video upload page
+├── lib/                # Utility functions
+├── models/             # MongoDB models
+├── public/            # Static assets
+└── types.d.ts         # TypeScript declarations
+```
+
+## Contributing
+
+NO CONTRIBUTING PLEASE!
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, watch youtube video

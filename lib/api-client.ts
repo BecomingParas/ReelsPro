@@ -1,10 +1,10 @@
-import { IVideo } from "@/app/models/Video";
+import { IVideo } from "@/models/Video";
 
 export type VideoFormData = Omit<IVideo, "_id">;
 
 type FetchOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
-  body?: Record<string, unknown> | string | FormData;
+  body?: any;
   headers?: Record<string, string>;
 };
 
@@ -15,19 +15,15 @@ class ApiClient {
   ): Promise<T> {
     const { method = "GET", body, headers = {} } = options;
 
-    const isFormData = body instanceof FormData;
-    const defaultHeaders = isFormData
-      ? headers // Let the browser set `Content-Type` for FormData
-      : { "Content-Type": "application/json", ...headers };
+    const defaultHeaders = {
+      "Content-Type": "application/json",
+      ...headers,
+    };
 
     const response = await fetch(`/api${endpoint}`, {
       method,
       headers: defaultHeaders,
-      body: isFormData
-        ? (body as FormData)
-        : body
-        ? JSON.stringify(body)
-        : undefined,
+      body: body ? JSON.stringify(body) : undefined,
     });
 
     if (!response.ok) {
@@ -41,11 +37,11 @@ class ApiClient {
     return this.fetch<IVideo[]>("/videos");
   }
 
-  async getAVideo(id: string) {
+  async getVideo(id: string) {
     return this.fetch<IVideo>(`/videos/${id}`);
   }
 
-  async createVideo(videoData: VideoFormData | FormData) {
+  async createVideo(videoData: VideoFormData) {
     return this.fetch<IVideo>("/videos", {
       method: "POST",
       body: videoData,
