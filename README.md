@@ -119,3 +119,64 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For support, watch youtube video
+```
+ReelsPro
+├─ .eslintrc.json
+├─ app
+│  ├─ api
+│  │  ├─ auth
+│  │  │  ├─ register
+│  │  │  │  └─ route.ts
+│  │  │  └─ [...nextauth]
+│  │  │     └─ route.ts
+│  │  ├─ imagekit-auth
+│  │  │  └─ route.ts
+│  │  └─ videos
+│  │     └─ route.ts
+│  ├─ components
+│  │  ├─ FileUpload.tsx
+│  │  ├─ Header.tsx
+│  │  ├─ Notification.tsx
+│  │  ├─ Providers.tsx
+│  │  ├─ VideoComponent.tsx
+│  │  ├─ VideoFeed.tsx
+│  │  └─ VideoUploadForm.tsx
+│  ├─ favicon.ico
+│  ├─ fonts
+│  │  ├─ GeistMonoVF.woff
+│  │  └─ GeistVF.woff
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  ├─ login
+│  │  └─ page.tsx
+│  ├─ page.tsx
+│  ├─ register
+│  │  └─ page.tsx
+│  └─ upload
+│     └─ page.tsx
+├─ lib
+│  ├─ api-client.ts
+│  ├─ auth.ts
+│  └─ db.ts
+├─ middleware.ts
+├─ models
+│  ├─ User.ts
+│  └─ Video.ts
+├─ next-auth.d.ts
+├─ next.config.ts
+├─ package-lock.json
+├─ package.json
+├─ postcss.config.mjs
+├─ public
+│  ├─ file.svg
+│  ├─ globe.svg
+│  ├─ next.svg
+│  ├─ vercel.svg
+│  └─ window.svg
+├─ README.md
+├─ tailwind.config.ts
+├─ tsconfig.json
+├─ types.d.ts
+└─ yarn.lock
+
+```
