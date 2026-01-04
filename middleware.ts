@@ -10,8 +10,9 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
 
-        // Allow auth-related routes
+        // 🚫 Never protect /auth, /login, /register
         if (
+          pathname.startsWith("/auth") ||
           pathname.startsWith("/api/auth") ||
           pathname === "/login" ||
           pathname === "/register"

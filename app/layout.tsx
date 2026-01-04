@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 // Providers
 import Providers from "./components/Providers";
+import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./components/Notification";
 import { LanguageProvider } from "./context/LanguageContext";
 
@@ -40,25 +41,27 @@ export default function RootLayout({
         style={{ fontFamily: "'Noto Sans Nepali', 'Poppins', sans-serif" }}
       >
         {/* All Providers in correct order */}
-        <Providers>
-          <LanguageProvider>
-            <NotificationProvider>
-              <div className="flex min-h-screen">
-                {/* Desktop Sidebar - Hidden on mobile */}
-                <Sidebar />
+        <AuthProvider>
+          <Providers>
+            <LanguageProvider>
+              <NotificationProvider>
+                <div className="flex min-h-screen">
+                  {/* Desktop Sidebar - Hidden on mobile */}
+                  <Sidebar />
 
-                {/* Main Content Area */}
-                <main className="flex-1 pb-16 md:pb-0 md:ml-64">
-                  {/* Optional max width for large screens */}
-                  <div className="max-w-5xl mx-auto w-full">{children}</div>
-                </main>
+                  {/* Main Content Area */}
+                  <main className="flex-1 pb-16 md:pb-0 md:ml-64">
+                    {/* Optional max width for large screens */}
+                    <div className="max-w-5xl mx-auto w-full">{children}</div>
+                  </main>
 
-                {/* Mobile Bottom Navigation */}
-                <BottomNav />
-              </div>
-            </NotificationProvider>
-          </LanguageProvider>
-        </Providers>
+                  {/* Mobile Bottom Navigation */}
+                  <BottomNav />
+                </div>
+              </NotificationProvider>
+            </LanguageProvider>
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   );

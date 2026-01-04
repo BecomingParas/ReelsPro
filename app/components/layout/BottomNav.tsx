@@ -10,11 +10,11 @@ export default function BottomNav() {
   const { t } = useLanguage();
 
   const navItems = [
-    { icon: Home, label: t("home"), href: "/" },
-    { icon: Compass, label: t("explore"), href: "/explore" },
-    { icon: PlusCircle, label: t("upload"), href: "/upload", isUpload: true },
-    { icon: MessageSquare, label: t("messages"), href: "/messages" },
-    { icon: User, label: t("profile"), href: "/profile" },
+    { id: 'home', icon: Home, label: t("home"), href: "/" },
+    { id: 'explore', icon: Compass, label: t("explore"), href: "/explore" },
+    { id: 'upload', icon: PlusCircle, label: t("upload"), href: "/upload", isUpload: true },
+    { id: 'messages', icon: MessageSquare, label: t("messages"), href: "/" }, // TODO: Create messages page
+    { id: 'profile', icon: User, label: t("profile"), href: "/profile" },
   ];
 
   return (
@@ -26,7 +26,7 @@ export default function BottomNav() {
           if (item.isUpload) {
             return (
               <Link
-                key={item.href}
+                key={item.id}
                 href={item.href}
                 className="flex flex-col items-center justify-center flex-1 h-full -mt-4"
               >
@@ -39,7 +39,7 @@ export default function BottomNav() {
 
           return (
             <Link
-              key={item.href}
+              key={item.id}
               href={item.href}
               className={cn(
                 "flex flex-col items-center justify-center flex-1 h-full transition-all duration-200",

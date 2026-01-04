@@ -28,23 +28,25 @@ export default function Sidebar() {
   const { t } = useLanguage();
 
   const menuItems = [
-    { icon: Home, label: t("home") || "Home", href: "/" },
-    { icon: Compass, label: t("explore") || "Explore", href: "/explore" },
-    { icon: Users, label: t("friends") || "Friends", href: "/friends" },
-    { icon: Tv, label: t("live") || "Live", href: "/live", badge: "NEW" },
+    { id: 'home', icon: Home, label: t("home") || "Home", href: "/" },
+    { id: 'explore', icon: Compass, label: t("explore") || "Explore", href: "/explore" },
+    { id: 'friends', icon: Users, label: t("friends") || "Friends", href: "/" }, // TODO: Create friends page
+    { id: 'live', icon: Tv, label: t("live") || "Live", href: "/", badge: "NEW" }, // TODO: Create live page
     {
+      id: 'messages',
       icon: MessageSquare,
       label: t("messages") || "Messages",
-      href: "/messages",
+      href: "/", // TODO: Create messages page
       count: 3,
     },
     {
+      id: 'notifications',
       icon: Bell,
       label: t("notifications") || "Notifications",
-      href: "/notifications",
+      href: "/", // TODO: Create notifications page
     },
-    { icon: Upload, label: t("upload") || "Upload", href: "/upload" },
-    { icon: User, label: t("profile") || "Profile", href: "/profile" },
+    { id: 'upload', icon: Upload, label: t("upload") || "Upload", href: "/upload" },
+    { id: 'profile', icon: User, label: t("profile") || "Profile", href: "/profile" },
   ];
 
   return (
@@ -57,7 +59,7 @@ export default function Sidebar() {
 
             return (
               <Link
-                key={item.href}
+                key={item.id}
                 href={item.href}
                 className={cn(
                   "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group",

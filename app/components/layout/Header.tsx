@@ -2,7 +2,7 @@
 import { useAuth } from "@/app/context/AuthContext";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { Search, Film, Bell, Upload } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import LanguageToggle from "../LanguageToggle";
 import { Button } from "../ui/button";
 
@@ -14,7 +14,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center group-hover:glow transition-all duration-300">
             <Film className="w-5 h-5 text-primary-foreground" />
           </div>
@@ -51,7 +51,7 @@ export default function Header() {
             <Search className="w-5 h-5" />
           </Button>
 
-          <Link to="/upload">
+          <Link href="/upload">
             <Button
               variant="ghost"
               size="icon"
@@ -72,7 +72,7 @@ export default function Header() {
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
-              <Link to="/profile">
+              <Link href="/profile">
                 <div className="w-9 h-9 rounded-full gradient-border p-0.5 cursor-pointer hover:glow-sm transition-all">
                   <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-xs font-bold">
                     {user?.fullName?.[0] || "U"}
@@ -89,7 +89,7 @@ export default function Header() {
               </Button>
             </div>
           ) : (
-            <Link to="/auth">
+            <Link href="/auth">
               <Button className="gradient-bg hover:opacity-90 transition-opacity rounded-full px-5 hidden sm:flex">
                 {t("login")}
               </Button>
@@ -98,7 +98,7 @@ export default function Header() {
 
           {/* Mobile avatar when not authenticated */}
           {!isAuthenticated && (
-            <Link to="/auth" className="sm:hidden">
+            <Link href="/auth" className="sm:hidden">
               <div className="w-8 h-8 rounded-full gradient-border overflow-hidden">
                 <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xs font-bold">
                   ?

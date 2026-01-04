@@ -1,48 +1,30 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
-import { LanguageProvider } from "./context/LanguageContext";
-import { AuthProvider } from "./context/AuthContext";
-import { TooltipProvider } from "./components/ui/tooltip";
-import { Toaster } from "./components/ui/toaster";
-import Index from "./pages/Index";
-import ExplorePage from "./pages/ExplorePage";
-import UploadPage from "./upload/page";
-import NotFound from "./pages/NotFound";
-import AuthPage from "./pages/AuthPage";
-import ProfilePage from "./pages/ProfilePage";
 
-const queryClient = new QueryClient();
+import { Suspense } from "react";
+import VideoFeed from "./components/video/VideoFeed";
 
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/explore" element={<ExplorePage />} />
-                <Route path="/upload" element={<UploadPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/friends" element={<Index />} />
-                <Route path="/live" element={<Index />} />
-                <Route path="/messages" element={<Index />} />
-                <Route path="/notifications" element={<Index />} />
-                <Route path="/settings" element={<Index />} />
-                <Route path="/user/:username" element={<ProfilePage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+// Loading component for Suspense fallback
+function VideoFeedSkeleton() {
+  return (
+    <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="text-center animate-fade-in">
+        <div className="w-20 h-20 mx-auto mb-4 rounded-full gradient-bg flex items-center justify-center animate-pulse">
+          <span className="text-3xl">🎬</span>
+        </div>
+        <p className="text-lg font-medium text-muted-foreground">
+          भिडियोहरू लोड हुँदैछ...
+        </p>
+      </div>
+    </div>
+  );
+}
 
-export default App;
+export default function HomePage() {
+  return (
+    <main className="w-full">
+      <Suspense fallback={<VideoFeedSkeleton />}>
+        <VideoFeed />
+      </Suspense>
+    </main>
+  );
+}
