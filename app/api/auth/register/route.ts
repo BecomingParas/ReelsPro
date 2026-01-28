@@ -31,10 +31,27 @@ function validateRegistration(data: any) {
   return errors;
 }
 
+function normalizeUsername(raw: any) {
+  return String(raw || "")
+    .trim()
+    .replace(/^@+/, "")
+    .toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "")
+    .slice(0, 30);
+}
+
+function normalizeName(raw: any) {
+  return String(raw || "").trim();
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, name, username } = body;
+    const email = String(body?.email || "");
+    const password = String(body?.password || "");
+    const name = normalizeName(body?.name);
+    const username = normalizeUsername(body?.username);
 
     // Validate input
     const errors = validateRegistration({ email, password, name, username });

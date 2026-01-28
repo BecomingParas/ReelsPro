@@ -305,7 +305,7 @@ export default function VideoCard({ video, isActive }: VideoCardProps) {
       <CommentSheet
         isOpen={showComments}
         onClose={() => setShowComments(false)}
-        comments={[]}
+        videoId={video.id}
       />
     </div>
   );

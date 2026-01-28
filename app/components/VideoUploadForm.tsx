@@ -3,7 +3,19 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
-import { Loader2, Upload, X, Tag, Music, MapPin } from "lucide-react";
+import { 
+  Loader2, 
+  Upload, 
+  X, 
+  Tag, 
+  Music, 
+  MapPin, 
+  Eye, 
+  Globe, 
+  Lock,
+  AlertCircle,
+  CheckCircle2
+} from "lucide-react";
 import { useNotification } from "./Notification";
 import { apiClient } from "@/lib/api-client";
 import FileUpload from "./FileUpload";
@@ -22,8 +34,9 @@ interface VideoFormData {
 export default function VideoUploadForm() {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [tags, setTags] = useState<string[]>(["नेपाली", "भिडियो"]);
+  const [tags, setTags] = useState<string[]>(["Tutorial", "Gaming"]);
   const [tagInput, setTagInput] = useState("");
+  const [privacy, setPrivacy] = useState<"public" | "private" | "unlisted">("public");
   const { showNotification } = useNotification();
   const { data: session } = useSession();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +45,7 @@ export default function VideoUploadForm() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<VideoFormData>({
     defaultValues: {
@@ -46,9 +60,15 @@ export default function VideoUploadForm() {
   });
 
   const handleUploadSuccess = (response: IKUploadResponse) => {
-    setValue("videoUrl", response.filePath);
-    setValue("thumbnailUrl", response.thumbnailUrl || response.filePath);
-    showNotification("भिडियो अपलोड सफल!", "success");
+    const anyResp = response as any;
+    const uploadedUrl: string = anyResp.url || anyResp.fileUrl || response.filePath;
+
+    setValue("videoUrl", uploadedUrl);
+    setValue(
+      "thumbnailUrl",
+      response.thumbnailUrl || anyResp.thumbnailUrl || uploadedUrl
+    );
+    showNotification("Video uploaded successfully!", "success");
   };
 
   const addTag = (tag: string) => {
@@ -68,7 +88,7 @@ export default function VideoUploadForm() {
 
   const onSubmit = async (data: VideoFormData) => {
     if (!data.videoUrl) {
-      showNotification("कृपया पहिले भिडियो अपलोड गर्नुहोस्", "error");
+      showNotification("Please upload a video first", "error");
       return;
     }
 
@@ -78,12 +98,12 @@ export default function VideoUploadForm() {
         ...data,
         user: {
           _id: session?.user?.id || "",
-          name: session?.user?.name || "नेपाली प्रयोगकर्ता",
-          username: session?.user?.email?.split("@")[0] || "nepali_user",
+          name: session?.user?.name || "User",
+          username: session?.user?.email?.split("@")[0] || "user",
           avatar: session?.user?.image || "/default-avatar.png",
         },
       });
-      showNotification("भिडियो प्रकाशित सफल!", "success");
+      showNotification("Video published successfully!", "success");
 
       // Reset form
       setValue("title", "");
@@ -93,11 +113,11 @@ export default function VideoUploadForm() {
       setValue("tags", []);
       setValue("location", "");
       setValue("music", "");
-      setTags(["नेपाली", "भिडियो"]);
+      setTags(["Tutorial", "Gaming"]);
       setUploadProgress(0);
     } catch (error) {
       showNotification(
-        error instanceof Error ? error.message : "भिडियो प्रकाशन असफल",
+        error instanceof Error ? error.message : "Failed to publish video",
         "error"
       );
     } finally {
@@ -106,195 +126,237 @@ export default function VideoUploadForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 shadow-2xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-bold">नयाँ भिडियो अपलोड</h2>
-            <p className="text-gray-400">
-              तपाईंको सिर्जनात्मक भिडियो साझा गर्नुहोस्
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      {/* File Upload Section */}
+      <div className="space-y-4">
+        <label className="block">
+          <span className="text-lg font-semibold mb-2 flex items-center gap-2">
+            <Upload className="w-5 h-5" />
+            Upload Video
+          </span>
+          <p className="text-muted-foreground text-sm mb-4">
+            Drag and drop your video file or click to browse
+          </p>
+        </label>
+        
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="relative border-2 border-dashed border-border rounded-2xl p-12 text-center hover:border-pink-500 transition-all duration-300 cursor-pointer group bg-muted/20"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-purple-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          
+          <div className="relative z-10">
+            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Upload className="w-12 h-12 text-pink-500" />
+            </div>
+            <p className="text-xl font-semibold mb-2">Select Video File</p>
+            <p className="text-muted-foreground mb-4">
+              Support: MP4, MOV, AVI • Max: 500MB
             </p>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center">
-            <Upload className="w-6 h-6" />
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-muted hover:bg-muted/80 transition-colors">
+              <Upload className="w-4 h-4" />
+              <span>Browse Files</span>
+            </div>
           </div>
         </div>
+        
+        <FileUpload
+          fileType="video"
+          onSuccess={handleUploadSuccess}
+          onProgress={setUploadProgress}
+          ref={fileInputRef}
+        />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* File Upload */}
-          <div className="form-control">
-            <label className="label">
-              <span className="text-lg font-semibold">
-                भिडियो अपलोड गर्नुहोस्
-              </span>
-            </label>
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-pink-500 transition-colors cursor-pointer"
-            >
-              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4">
-                <Upload className="w-10 h-10 text-pink-500" />
-              </div>
-              <p className="text-lg font-medium mb-2">भिडियो छनोट गर्नुहोस्</p>
-              <p className="text-gray-400 text-sm">
-                MP4, MOV, AVI, अधिकतम 100MB
-              </p>
+        {uploadProgress > 0 && (
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Upload Progress</span>
+              <span className="font-medium">{uploadProgress}%</span>
             </div>
-            <FileUpload
-              fileType="video"
-              onSuccess={handleUploadSuccess}
-              onProgress={setUploadProgress}
-              ref={fileInputRef}
-            />
-
-            {uploadProgress > 0 && (
-              <div className="mt-4">
-                <div className="flex justify-between text-sm mb-1">
-                  <span>अपलोड प्रगति</span>
-                  <span>{uploadProgress}%</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div
-                    className="bg-gradient-to-r from-pink-500 to-purple-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${uploadProgress}%` }}
-                  />
-                </div>
-              </div>
-            )}
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
           </div>
+        )}
+      </div>
 
-          {/* Title */}
-          <div className="form-control">
-            <label className="label">
-              <span className="text-lg font-semibold">शीर्षक</span>
-            </label>
+      {/* Title Input */}
+      <div className="space-y-3">
+        <label className="block">
+          <span className="text-lg font-semibold mb-2">Video Title</span>
+          <input
+            type="text"
+            className={`w-full px-4 py-3 rounded-xl bg-background/60 border ${
+              errors.title ? "border-red-500/50" : "border-border/50"
+            } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all`}
+            placeholder="Enter an engaging title for your video..."
+            {...register("title", { required: "Title is required" })}
+          />
+        </label>
+        {errors.title && (
+          <div className="flex items-center gap-2 text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4" />
+            <span>{errors.title.message}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Description Input */}
+      <div className="space-y-3">
+        <label className="block">
+          <span className="text-lg font-semibold mb-2">Description</span>
+          <textarea
+            className={`w-full px-4 py-3 rounded-xl bg-background/60 border ${
+              errors.description ? "border-red-500/50" : "border-border/50"
+            } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[120px]`}
+            placeholder="Describe your video content..."
+            {...register("description", { required: "Description is required" })}
+          />
+        </label>
+        {errors.description && (
+          <div className="flex items-center gap-2 text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4" />
+            <span>{errors.description.message}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Tags Input */}
+      <div className="space-y-4">
+        <label className="block">
+          <span className="text-lg font-semibold mb-2 flex items-center gap-2">
+            <Tag className="w-5 h-5" />
+            Tags
+          </span>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1.5 bg-gradient-to-r from-pink-500/10 to-purple-600/10 rounded-full flex items-center gap-2 border border-pink-500/20"
+              >
+                #{tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="hover:text-red-400 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="flex gap-2">
             <input
               type="text"
-              className={`input input-bordered bg-gray-900 border-gray-700 rounded-xl h-14 text-lg ${
-                errors.title ? "input-error" : ""
-              }`}
-              placeholder="आकर्षक शीर्षक लेख्नुहोस्..."
-              {...register("title", { required: "शीर्षक आवश्यक छ" })}
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
+              }
+              className="flex-1 px-4 py-2 rounded-xl bg-background/60 border border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+              placeholder="Add a tag..."
             />
-            {errors.title && (
-              <span className="text-error text-sm mt-1">
-                {errors.title.message}
-              </span>
-            )}
+            <button
+              type="button"
+              onClick={() => addTag(tagInput)}
+              className="px-4 py-2 rounded-xl bg-muted hover:bg-muted/80 transition-colors border border-border/50"
+            >
+              Add
+            </button>
           </div>
+        </label>
+      </div>
 
-          {/* Description */}
-          <div className="form-control">
-            <label className="label">
-              <span className="text-lg font-semibold">विवरण</span>
-            </label>
-            <textarea
-              className={`textarea textarea-bordered bg-gray-900 border-gray-700 rounded-xl h-32 text-lg ${
-                errors.description ? "textarea-error" : ""
-              }`}
-              placeholder="तपाईंको भिडियोको बारेमा केहि लेख्नुहोस्..."
-              {...register("description", { required: "विवरण आवश्यक छ" })}
-            />
-            {errors.description && (
-              <span className="text-error text-sm mt-1">
-                {errors.description.message}
-              </span>
-            )}
-          </div>
-
-          {/* Tags */}
-          <div className="form-control">
-            <label className="label">
-              <span className="text-lg font-semibold flex items-center gap-2">
-                <Tag className="w-5 h-5" /> ट्यागहरू
-              </span>
-            </label>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-4 py-2 bg-gradient-to-r from-pink-500/20 to-purple-600/20 rounded-full flex items-center gap-2"
-                >
-                  #{tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    className="hover:text-red-400"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
-                }
-                className="input input-bordered bg-gray-900 border-gray-700 rounded-xl flex-1"
-                placeholder="ट्याग थप्नुहोस्..."
-              />
+      {/* Privacy Settings */}
+      <div className="space-y-4">
+        <label className="block">
+          <span className="text-lg font-semibold mb-2">Privacy Settings</span>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { value: "public", icon: Globe, label: "Public", desc: "Anyone can view" },
+              { value: "unlisted", icon: Eye, label: "Unlisted", desc: "Only with link" },
+              { value: "private", icon: Lock, label: "Private", desc: "Only you" },
+            ].map((option) => (
               <button
+                key={option.value}
                 type="button"
-                onClick={() => addTag(tagInput)}
-                className="btn btn-outline border-gray-700 hover:border-pink-500"
+                onClick={() => setPrivacy(option.value as any)}
+                className={`p-4 rounded-xl border-2 transition-all ${
+                  privacy === option.value
+                    ? "border-pink-500 bg-pink-500/10"
+                    : "border-border/50 bg-muted/20 hover:bg-muted/30"
+                }`}
               >
-                थप्नुहोस्
+                <option.icon className={`w-5 h-5 mb-2 ${
+                  privacy === option.value ? "text-pink-500" : "text-muted-foreground"
+                }`} />
+                <p className="font-medium">{option.label}</p>
+                <p className="text-xs text-muted-foreground mt-1">{option.desc}</p>
               </button>
-            </div>
+            ))}
           </div>
+        </label>
+      </div>
 
-          {/* Music & Location */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="form-control">
-              <label className="label">
-                <span className="text-lg font-semibold flex items-center gap-2">
-                  <Music className="w-5 h-5" /> साङ्गीत
-                </span>
-              </label>
-              <input
-                type="text"
-                className="input input-bordered bg-gray-900 border-gray-700 rounded-xl h-14"
-                placeholder="साङ्गीत थप्नुहोस्..."
-                {...register("music")}
-              />
-            </div>
+      {/* Music & Location */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <label className="block">
+            <span className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <Music className="w-5 h-5" />
+              Music Credit
+            </span>
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              placeholder="Add music credit..."
+              {...register("music")}
+            />
+          </label>
+        </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="text-lg font-semibold flex items-center gap-2">
-                  <MapPin className="w-5 h-5" /> स्थान
-                </span>
-              </label>
-              <input
-                type="text"
-                className="input input-bordered bg-gray-900 border-gray-700 rounded-xl h-14"
-                placeholder="स्थान थप्नुहोस्..."
-                {...register("location")}
-              />
-            </div>
-          </div>
+        <div className="space-y-3">
+          <label className="block">
+            <span className="text-lg font-semibold mb-2 flex items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              Location
+            </span>
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              placeholder="Add location..."
+              {...register("location")}
+            />
+          </label>
+        </div>
+      </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="btn btn-block h-16 text-lg font-bold rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 border-0 hover:opacity-90 transition-all duration-300"
-            disabled={loading || uploadProgress < 100}
-          >
+      {/* Submit Button */}
+      <div className="pt-6">
+        <button
+          type="submit"
+          disabled={loading || uploadProgress < 100}
+          className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] relative group"
+        >
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 via-pink-500/20 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <span className="relative z-10 flex items-center justify-center gap-3">
             {loading ? (
               <>
-                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-                प्रकाशन हुदैछ...
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Publishing Video...
               </>
             ) : (
-              "भिडियो प्रकाशित गर्नुहोस्"
+              <>
+                <CheckCircle2 className="w-5 h-5" />
+                Publish Video
+              </>
             )}
-          </button>
-        </form>
+          </span>
+        </button>
       </div>
-    </div>
+    </form>
   );
 }

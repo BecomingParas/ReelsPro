@@ -116,8 +116,5 @@ export const authOptions: NextAuthOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  // Security options
-  useSecureSessionCookies: process.env.NODE_ENV === "production",
-
   debug: process.env.NODE_ENV === "development",
 };

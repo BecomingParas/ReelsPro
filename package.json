@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "seed": "node scripts/seed.js",
     "mailtrap": "node scripts/mail-test.js"
   },

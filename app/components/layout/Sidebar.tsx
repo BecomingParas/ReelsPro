@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
 import {
@@ -15,17 +16,59 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const followingAccounts = [
-  { username: "@sarala_shrestha", name: "सरला श्रेष्ठ", live: true },
-  { username: "@basantashrestha", name: "बसन्त श्रेष्ठ", live: false },
-  { username: "@maya_ehu", name: "माया एहु", live: true },
-  { username: "@kamal_sharif", name: "कमल शरिफ", live: false },
-];
+type SidebarUser = {
+  id: string;
+  name: string;
+  username: string;
+  avatar?: string;
+};
 
 export default function Sidebar() {
   const pathname = usePathname(); // This replaces useLocation()
   const { t } = useLanguage();
+  const { data: session, status } = useSession();
+  const [usersList, setUsersList] = useState<SidebarUser[]>([]);
+
+  const selfId = session?.user?.id;
+  const fallbackInitial = useMemo(() => {
+    const v = (session?.user?.name || session?.user?.email || "U").trim();
+    return v.slice(0, 1).toUpperCase();
+  }, [session?.user?.email, session?.user?.name]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/users", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const mapped: SidebarUser[] = Array.isArray(data)
+          ? data.map((u: any) => ({
+              id: String(u._id ?? u.id),
+              name: String(u.name || "User"),
+              username: String(u.username || "user"),
+              avatar: u.avatar ? String(u.avatar) : undefined,
+            }))
+          : [];
+
+        const filtered = selfId
+          ? mapped.filter((u) => u.id !== String(selfId))
+          : mapped;
+
+        if (!cancelled) setUsersList(filtered);
+      } catch {
+        // ignore
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [selfId]);
 
   const menuItems = [
     { id: 'home', icon: Home, label: t("home") || "Home", href: "/" },
@@ -47,10 +90,20 @@ export default function Sidebar() {
     },
     { id: 'upload', icon: Upload, label: t("upload") || "Upload", href: "/upload" },
     { id: 'profile', icon: User, label: t("profile") || "Profile", href: "/profile" },
+    { id: 'settings', icon: Settings, label: t("settings") || "Settings", href: "/settings" },
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-16 border-r border-border/50 bg-sidebar/50 backdrop-blur-sm">
+    <aside className="hidden md:flex flex-col w-64 h-full border-r border-border/50 bg-sidebar/50 backdrop-blur-sm">
+        <Link href="/" className="flex items-center gap-2 p-4 border-b border-border/50">
+          <div className="w-8 h-8 rounded-xl gradient-bg flex items-center justify-center">
+            <span className="text-lg font-bold">RN</span>
+          </div>
+          <h1 className="text-xl font-bold gradient-text hidden md:block">
+            ReelsNepal
+          </h1>
+        </Link>
+
       {/* Main Menu */}
       <nav className="flex-1 p-4 overflow-y-auto scrollbar-hide">
         <div className="space-y-1 stagger-children">
@@ -96,59 +149,39 @@ export default function Sidebar() {
         {/* Divider */}
         <div className="my-6 border-t border-border/50" />
 
-        {/* Following Section */}
         <div>
           <h3 className="px-4 mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-            {t("following") || "Following"}
+            {t("users") || "Users"}
           </h3>
           <div className="space-y-1">
-            {followingAccounts.map((account) => (
-              <Link
-                key={account.username}
-                href={`/user/${account.username.replace("@", "")}`}
+            {usersList.map((u) => (
+              <div
+                key={u.id}
                 className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-muted/50 transition-all duration-200 group"
               >
-                <div className="relative">
-                  <div
-                    className={cn(
-                      "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold",
-                      account.live
-                        ? "gradient-border animate-pulse-glow"
-                        : "bg-muted"
-                    )}
-                  >
-                    <span className="gradient-text">{account.name[0]}</span>
-                  </div>
-                  {account.live && (
-                    <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-live rounded-full border-2 border-sidebar flex items-center justify-center">
-                      <span className="w-1.5 h-1.5 bg-primary-foreground rounded-full" />
-                    </span>
-                  )}
-                </div>
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={u.avatar || ""} alt={u.name} />
+                  <AvatarFallback>{u.name?.slice(0, 1)?.toUpperCase()}</AvatarFallback>
+                </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                    {account.name}
+                    {u.name}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">
-                    {account.username}
+                    @{u.username}
                   </p>
                 </div>
-              </Link>
+              </div>
             ))}
+
+            {usersList.length === 0 ? (
+              <div className="px-4 py-2 text-xs text-muted-foreground">
+                No users found
+              </div>
+            ) : null}
           </div>
         </div>
       </nav>
-
-      {/* Footer */}
-      <div className="p-4 border-t border-border/50">
-        <Link
-          href="/settings"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted/50 transition-all text-muted-foreground hover:text-foreground"
-        >
-          <Settings className="w-5 h-5" />
-          <span className="font-medium">{t("settings") || "Settings"}</span>
-        </Link>
-      </div>
     </aside>
   );
 }

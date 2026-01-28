@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 type Language = "ne" | "en";
 
@@ -18,6 +18,8 @@ const translations: Translations = {
   messages: { ne: "सन्देश", en: "Messages" },
   notifications: { ne: "सूचनाहरू", en: "Notifications" },
   settings: { ne: "सेटिङ्स", en: "Settings" },
+  following: { ne: "फलोइङ", en: "Following" },
+  users: { ne: "प्रयोगकर्ताहरू", en: "Users" },
 
   // Auth
   login: { ne: "लगइन", en: "Login" },
@@ -41,7 +43,6 @@ const translations: Translations = {
   liked: { ne: "मन पराएको", en: "Liked" },
   saved: { ne: "सेभ गरिएको", en: "Saved" },
   followers: { ne: "फलोअर्स", en: "Followers" },
-  following: { ne: "फलोइङ", en: "Following" },
   likes: { ne: "लाइक्स", en: "Likes" },
   bio: { ne: "परिचय", en: "Bio" },
 
@@ -107,6 +108,29 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("ne");
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("language");
+      if (saved === "ne" || saved === "en") {
+        setLanguage(saved);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("language", language);
+    } catch {
+      // ignore
+    }
+
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = language;
+    }
+  }, [language]);
 
   const t = (key: string): string => {
     return translations[key]?.[language] || key;

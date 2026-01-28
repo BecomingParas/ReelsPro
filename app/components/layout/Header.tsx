@@ -1,111 +1,153 @@
 "use client";
-import { useAuth } from "@/app/context/AuthContext";
-import { useLanguage } from "@/app/context/LanguageContext";
-import { Search, Film, Bell, Upload } from "lucide-react";
-import Link from "next/link";
-import LanguageToggle from "../LanguageToggle";
-import { Button } from "../ui/button";
 
-export default function Header() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Search, Plus, Bell } from "lucide-react";
+import { useLanguage } from "@/app/context/LanguageContext";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+
+export default function TopBar() {
   const { t } = useLanguage();
-  const { isAuthenticated, user, logout } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  const displayName = session?.user?.name || session?.user?.email || "";
+  const fallbackInitial = (session?.user?.name || session?.user?.email || "U")
+    .trim()
+    .slice(0, 1)
+    .toUpperCase();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center group-hover:glow transition-all duration-300">
-            <Film className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold hidden sm:block">
-            <span className="gradient-text">नेपाली</span>
-            <span className="text-foreground"> Reels</span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-40 h-16 glass border-b border-border/50">
+      <div className="h-16 flex items-center justify-between px-4 md:px-6">
+    
 
-        {/* Search Bar - Hidden on mobile */}
-        <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-          <div className="relative w-full group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        {/* Search Bar */}
+        <div className="flex-1 max-w-2xl mx-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <input
               type="text"
-              placeholder={t("search")}
-              className="w-full h-10 pl-11 pr-4 rounded-full bg-muted/50 border border-border/50 focus:border-primary/50 focus:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground text-sm"
+              placeholder={t("search") || "खोज्नुहोस्..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-background/60 border border-border/60 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300"
             />
+            {searchQuery && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          {/* Language Toggle */}
-          <div className="hidden sm:block">
-            <LanguageToggle />
-          </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden rounded-full hover:bg-muted"
+          {/* Create Button */}
+          <button
+            onClick={() => router.push("/upload")}
+            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl gradient-bg text-white hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
-            <Search className="w-5 h-5" />
-          </Button>
+            <Plus className="w-4 h-4" />
+            <span className="font-medium">
+              {t("create") || "सिर्जना गर्नुहोस्"}
+            </span>
+          </button>
 
-          <Link href="/upload">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-muted relative group"
-            >
-              <Upload className="w-5 h-5 group-hover:text-primary transition-colors" />
-            </Button>
-          </Link>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-muted relative"
+          {/* Upload Button for mobile */}
+          <button
+            onClick={() => router.push("/upload")}
+            className="md:hidden p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
           >
+            <Plus className="w-5 h-5" />
+          </button>
+
+          {/* Notifications */}
+          <button className="relative p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
             <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full animate-pulse" />
-          </Button>
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          </button>
 
-          {isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Link href="/profile">
-                <div className="w-9 h-9 rounded-full gradient-border p-0.5 cursor-pointer hover:glow-sm transition-all">
-                  <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-xs font-bold">
-                    {user?.fullName?.[0] || "U"}
-                  </div>
-                </div>
-              </Link>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={logout}
-                className="hidden sm:flex text-muted-foreground hover:text-foreground"
-              >
-                {t("logout")}
-              </Button>
-            </div>
-          ) : (
-            <Link href="/auth">
-              <Button className="gradient-bg hover:opacity-90 transition-opacity rounded-full px-5 hidden sm:flex">
-                {t("login")}
-              </Button>
-            </Link>
-          )}
+          {/* User Menu */}
+          {status !== "loading" && !session ? (
+            <button
+              onClick={() => signIn(undefined, { callbackUrl: "/" })}
+              className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
+            >
+              {t("login")}
+            </button>
+          ) : null}
 
-          {/* Mobile avatar when not authenticated */}
-          {!isAuthenticated && (
-            <Link href="/auth" className="sm:hidden">
-              <div className="w-8 h-8 rounded-full gradient-border overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xs font-bold">
-                  ?
-                </div>
-              </div>
-            </Link>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1 rounded-full gradient-border">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={session?.user?.avatar || ""}
+                    alt={session?.user?.name || "User"}
+                  />
+                  <AvatarFallback>{fallbackInitial}</AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {session ? (
+                <>
+                  <DropdownMenuLabel className="flex flex-col">
+                    <span className="text-sm font-semibold truncate">
+                      {displayName}
+                    </span>
+                    {session?.user?.username ? (
+                      <span className="text-xs text-muted-foreground truncate">
+                        @{session.user.username}
+                      </span>
+                    ) : null}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">{t("profile")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings">{t("settings")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    {t("logout")}
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuLabel>{t("settings")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings">{t("settings")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signIn(undefined, { callbackUrl: "/" })}>
+                    {t("login")}
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
