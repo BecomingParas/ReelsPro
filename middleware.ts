@@ -10,8 +10,9 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
 
-        // Allow auth-related routes
+        // 🚫 Never protect /auth, /login, /register
         if (
+          pathname.startsWith("/auth") ||
           pathname.startsWith("/api/auth") ||
           pathname === "/login" ||
           pathname === "/register"
@@ -20,7 +21,12 @@ export default withAuth(
         }
 
         // Public routes
-        if (pathname === "/" || pathname.startsWith("/api/videos")) {
+        if (
+          pathname === "/" ||
+          pathname.startsWith("/api/videos") ||
+          pathname.startsWith("/explore") ||
+          pathname.startsWith("/settings")
+        ) {
           return true;
         }
         // All other routes require authentication
@@ -37,8 +43,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
+     * - public files (served from /)
      */
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|css|js|map|txt)$).*)",
   ],
 };

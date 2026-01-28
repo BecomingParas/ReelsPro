@@ -47,19 +47,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new video with default values
-    const videoData = {
-      ...body,
-      controls: body.controls ?? true,
-      transformation: {
-        height: 1920,
-        width: 1080,
-        quality: body.transformation?.quality ?? 100,
-      },
-    };
+    // Validate user data structure
+    if (!body.user || !body.user._id) {
+      return NextResponse.json(
+        { error: "User information is required" },
+        { status: 400 }
+      );
+    }
 
-    const newVideo = await Video.create(videoData);
-    return NextResponse.json(newVideo);
+    // Create new video
+    const newVideo = await Video.create({
+      title: body.title,
+      description: body.description,
+      videoUrl: body.videoUrl,
+      thumbnailUrl: body.thumbnailUrl,
+      user: body.user,
+      tags: body.tags || [],
+      location: body.location || "",
+      music: body.music || "",
+      visibility: body.visibility || "public",
+    });
+
+    return NextResponse.json(newVideo, { status: 201 });
   } catch (error) {
     console.error("Error creating video:", error);
     return NextResponse.json(

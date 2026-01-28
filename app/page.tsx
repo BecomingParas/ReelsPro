@@ -1,30 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import VideoFeed from "./components/VideoFeed";
-import { IVideo } from "@/models/Video";
-import { apiClient } from "@/lib/api-client";
+import { Suspense } from "react";
+import VideoFeed from "./components/video/VideoFeed";
 
-export default function Home() {
-  const [videos, setVideos] = useState<IVideo[]>([]);
-
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const data = await apiClient.getVideos();
-        setVideos(data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    fetchVideos();
-  }, []);
-
+// Loading component for Suspense fallback
+function VideoFeedSkeleton() {
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 ">ReelsPro</h1>
-      <VideoFeed videos={videos} />
+    <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="text-center animate-fade-in">
+        <div className="w-20 h-20 mx-auto mb-4 rounded-full gradient-bg flex items-center justify-center animate-pulse">
+          <span className="text-3xl">🎬</span>
+        </div>
+        <p className="text-lg font-medium text-muted-foreground">
+          भिडियोहरू लोड हुँदैछ...
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="w-full">
+      <Suspense fallback={<VideoFeedSkeleton />}>
+        <VideoFeed />
+      </Suspense>
     </main>
   );
 }

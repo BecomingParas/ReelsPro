@@ -2,37 +2,140 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ======================================================
+   Design Tokens — Light (default)
+   ====================================================== */
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  /* Base colors */
+  --background: 330 100% 98%;
+  --foreground: 222.2 47.4% 11.2%;
+
+  /* Card / surface */
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+
+  /* Borders & inputs */
+  --border: 330 30% 90%;
+  --input: 330 30% 90%;
+
+  /* Ring */
+  --ring: 345 82% 55%;
+
+  /* Primary */
+  --primary: 345 82% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary */
+  --secondary: 330 40% 96%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  /* Muted */
+  --muted: 330 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  /* Accent */
+  --accent: 330 40% 96%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  /* Popover */
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+
+  /* Sidebar */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 222.2 47.4% 11.2%;
+
+  /* Status */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Radius */
+  --radius: 0.75rem;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  min-height: 100vh;
-}
+/* ======================================================
+   Dark Mode Tokens
+   ====================================================== */
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
 
-/* Force dark mode for inputs and other elements */
-input,
-textarea {
-  color-scheme: dark;
-  @apply bg-gray-800 border-gray-700 text-white;
-}
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
 
-/* Scrollbar customization for dark theme */
-::-webkit-scrollbar {
-  width: 10px;
-}
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
 
-::-webkit-scrollbar-track {
-  @apply bg-gray-900;
-}
+  --ring: 346 78% 58%;
 
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-700 rounded-full;
-}
+  --primary: 244 75% 57%;
+  --primary-foreground: 0 0% 100%;
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-600;
+  --secondary: 223 47% 11%;
+  --secondary-foreground: 213 31% 91%;
+
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+
+  --accent: 223 47% 11%;
+  --accent-foreground: 213 31% 91%;
+
+  --popover: 224 71% 4%;
+  --popover-foreground: 213 31% 91%;
+
+  --sidebar: 224 71% 4%;
+  --sidebar-foreground: 213 31% 91%;
+
+  --destructive: 0 62.8% 50.6%;
+  --destructive-foreground: 0 0% 100%;
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+@layer components {
+  .glass {
+    background: hsl(var(--background) / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .gradient-border {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(270 70% 55%) 100%
+    );
+  }
+
+  .glow-sm {
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.18),
+      0 12px 30px -16px hsl(var(--primary) / 0.45);
+  }
+
+  .gradient-bg {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(270 70% 55%) 100%
+    );
+  }
+
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(270 70% 55%)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
