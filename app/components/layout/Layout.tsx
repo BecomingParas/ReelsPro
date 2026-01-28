@@ -12,7 +12,9 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, _setSidebarCollapsed] = useState(false);
+
+  void _setSidebarCollapsed;
 
   // Check if we're on mobile
   useEffect(() => {

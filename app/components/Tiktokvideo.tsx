@@ -9,7 +9,7 @@ import {
   Music,
   MoreVertical,
 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 
 export default function TikTokVideo({
   video,
@@ -23,17 +23,58 @@ export default function TikTokVideo({
     video.likes || Math.floor(Math.random() * 1000)
   );
   const [following, setFollowing] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoElementId = useId();
+  const [progressPercent, setProgressPercent] = useState(0);
 
   useEffect(() => {
-    if (videoRef.current) {
-      if (isActive) {
-        videoRef.current.play().catch(console.error);
-      } else {
-        videoRef.current.pause();
-      }
+    videoRef.current = document.getElementById(
+      videoElementId
+    ) as HTMLVideoElement | null;
+  }, [videoElementId]);
+
+  useEffect(() => {
+    const el =
+      videoRef.current ||
+      (document.getElementById(videoElementId) as HTMLVideoElement | null);
+
+    if (!el) return;
+    videoRef.current = el;
+
+    if (isActive) {
+      el.play().catch(console.error);
+    } else {
+      el.pause();
     }
   }, [isActive]);
+
+  useEffect(() => {
+    const el =
+      videoRef.current ||
+      (document.getElementById(videoElementId) as HTMLVideoElement | null);
+    if (!el) return;
+    videoRef.current = el;
+
+    const updateProgress = () => {
+      if (!el.duration || Number.isNaN(el.duration)) {
+        setProgressPercent(0);
+        return;
+      }
+      setProgressPercent((el.currentTime / el.duration) * 100);
+    };
+
+    el.addEventListener("timeupdate", updateProgress);
+    el.addEventListener("loadedmetadata", updateProgress);
+    el.addEventListener("durationchange", updateProgress);
+
+    updateProgress();
+
+    return () => {
+      el.removeEventListener("timeupdate", updateProgress);
+      el.removeEventListener("loadedmetadata", updateProgress);
+      el.removeEventListener("durationchange", updateProgress);
+    };
+  }, [videoElementId]);
 
   const handleLike = () => {
     setLiked(!liked);
@@ -58,7 +99,7 @@ export default function TikTokVideo({
           loop
           muted={!isActive}
           className="w-full h-[85vh] object-cover"
-          ref={videoRef}
+          id={videoElementId}
         />
 
         {/* Gradient Overlay */}
@@ -178,12 +219,7 @@ export default function TikTokVideo({
         <div
           className="h-full bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-1000"
           style={{
-            width: videoRef.current?.duration
-              ? `${
-                  (videoRef.current.currentTime / videoRef.current.duration) *
-                  100
-                }%`
-              : "0%",
+            width: `${progressPercent}%`,
           }}
         />
       </div>

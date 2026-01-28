@@ -10,8 +10,6 @@ import {
   Video,
   Heart,
   MessageSquare,
-  Share2,
-  Globe,
   Lock,
   Users,
   Calendar,
@@ -19,7 +17,6 @@ import {
   Link as LinkIcon,
   Instagram,
   Twitter,
-  Youtube,
   Plus,
   Grid,
   List,
@@ -29,12 +26,57 @@ import {
   Award,
   Star,
   Bookmark,
-  Download,
   MoreVertical,
   CheckCircle2,
   Eye,
-  EyeOff
+  type LucideIcon
 } from "lucide-react";
+
+type ProfileStat = {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  change: string;
+};
+
+type RecentActivity = {
+  icon: LucideIcon;
+  action: string;
+  target: string;
+  time: string;
+};
+
+type AchievementBadge = {
+  title: string;
+  icon: LucideIcon;
+  unlocked: boolean;
+};
+
+const profileStats: ProfileStat[] = [
+  { label: "Followers", value: "1.2K", icon: Users, change: "+120" },
+  { label: "Following", value: "356", icon: Users, change: "+45" },
+  { label: "Videos", value: "48", icon: Video, change: "12 new" },
+  { label: "Likes", value: "5.8K", icon: Heart, change: "+856" },
+];
+
+const recentActivities: RecentActivity[] = [
+  { icon: Heart, action: "liked", target: "Mountain Adventure", time: "2 hours ago" },
+  { icon: Bookmark, action: "saved", target: "Cooking Tutorial", time: "1 day ago" },
+  { icon: Users, action: "followed", target: "Travel Nepal", time: "2 days ago" },
+  { icon: Star, action: "featured", target: "Your video", time: "3 days ago" },
+  { icon: TrendingUp, action: "trending", target: "Himalayan Trek", time: "1 week ago" },
+];
+
+const achievementBadges: AchievementBadge[] = [
+  { title: "First Video", icon: Video, unlocked: true },
+  { title: "100 Likes", icon: Heart, unlocked: true },
+  { title: "50 Followers", icon: Users, unlocked: true },
+  { title: "Top Creator", icon: Star, unlocked: false },
+  { title: "Weekly Streak", icon: Clock, unlocked: true },
+  { title: "Video Editor", icon: Edit, unlocked: false },
+  { title: "Community Star", icon: Award, unlocked: true },
+  { title: "Rising Talent", icon: TrendingUp, unlocked: true },
+];
 
 function ProfileContent() {
     const { data: session, status } = useSession();
@@ -194,12 +236,7 @@ function ProfileContent() {
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-6 mb-8">
-            {[
-              { label: "Followers", value: "1.2K", icon: Users, change: "+120" },
-              { label: "Following", value: "356", icon: Users, change: "+45" },
-              { label: "Videos", value: "48", icon: Video, change: "12 new" },
-              { label: "Likes", value: "5.8K", icon: Heart, change: "+856" },
-            ].map((stat, index) => (
+            {profileStats.map((stat, index) => (
               <div key={index} className="bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 p-6 hover:border-pink-500/30 transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <stat.icon className="w-8 h-8 text-muted-foreground" />
@@ -301,13 +338,7 @@ function ProfileContent() {
             </div>
             
             <div className="space-y-4">
-              {[
-                { icon: Heart, action: "liked", target: "Mountain Adventure", time: "2 hours ago" },
-                { icon: Bookmark, action: "saved", target: "Cooking Tutorial", time: "1 day ago" },
-                { icon: Users, action: "followed", target: "Travel Nepal", time: "2 days ago" },
-                { icon: Star, action: "featured", target: "Your video", time: "3 days ago" },
-                { icon: TrendingUp, action: "trending", target: "Himalayan Trek", time: "1 week ago" },
-              ].map((activity, index) => (
+              {recentActivities.map((activity, index) => (
                 <div key={index} className="flex items-center gap-4 p-4 rounded-xl bg-muted/20 hover:bg-muted/30 transition-colors border border-border/50">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-pink-500/20 to-purple-600/20">
                     <activity.icon className="w-5 h-5 text-pink-500" />
@@ -334,16 +365,7 @@ function ProfileContent() {
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { title: "First Video", icon: Video, unlocked: true },
-                { title: "100 Likes", icon: Heart, unlocked: true },
-                { title: "50 Followers", icon: Users, unlocked: true },
-                { title: "Top Creator", icon: Star, unlocked: false },
-                { title: "Weekly Streak", icon: Clock, unlocked: true },
-                { title: "Video Editor", icon: Edit, unlocked: false },
-                { title: "Community Star", icon: Award, unlocked: true },
-                { title: "Rising Talent", icon: TrendingUp, unlocked: true },
-              ].map((badge, index) => (
+              {achievementBadges.map((badge, index) => (
                 <div key={index} className={`p-4 rounded-xl text-center ${
                   badge.unlocked 
                     ? "bg-gradient-to-br from-pink-500/10 to-purple-600/10 border border-pink-500/30"

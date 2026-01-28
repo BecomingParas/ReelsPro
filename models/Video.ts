@@ -6,7 +6,7 @@ export interface IVideo extends Document {
   videoUrl: string;
   thumbnailUrl: string;
   user: {
-    _id: mongoose.Types.ObjectId;
+    _id: mongoose.Types.ObjectId | string;
     name: string;
     username: string;
     avatar: string;
@@ -60,7 +60,7 @@ const VideoSchema: Schema = new Schema(
 );
 
 // Virtual for formatted duration
-VideoSchema.virtual("formattedDuration").get(function () {
+VideoSchema.virtual("formattedDuration").get(function (this: IVideo) {
   const minutes = Math.floor(this.duration / 60);
   const seconds = this.duration % 60;
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;

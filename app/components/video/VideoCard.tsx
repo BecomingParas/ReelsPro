@@ -7,7 +7,6 @@ import {
   Bookmark,
   MoreVertical,
   Play,
-  Pause,
   Volume2,
   VolumeX,
   Music,

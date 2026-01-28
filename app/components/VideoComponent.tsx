@@ -1,6 +1,6 @@
 // components/VideoComponent.tsx (updated to match the provided VideoCard with animations, motions, and responsive design)
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useId } from "react";
 import {
   Heart,
   MessageCircle,
@@ -23,13 +23,20 @@ export default function VideoComponent({
   video,
   isActive,
 }: VideoComponentProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoElementId = useId();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isLiked, setIsLiked] = useState(false); // TODO: Fetch from user session/API
   const [isSaved, setIsSaved] = useState(false); // TODO: Fetch from user session/API
   const [likes, setLikes] = useState(video.likes);
   const [showHeart, setShowHeart] = useState(false);
+
+  useEffect(() => {
+    videoRef.current = document.getElementById(
+      videoElementId
+    ) as HTMLVideoElement | null;
+  }, [videoElementId]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -87,7 +94,7 @@ export default function VideoComponent({
       {/* Centered on desktop */}
       {/* Video */}
       <IKVideo
-        ref={videoRef as any} // IKVideo might need ref adjustment if not supporting HTMLVideoElement directly
+        id={videoElementId} // IKVideo might need ref adjustment if not supporting HTMLVideoElement directly
         path={video.videoUrl}
         transformation={[{ height: "1920", width: "1080" }]}
         controls={false} // Managed manually

@@ -45,7 +45,6 @@ export default function VideoUploadForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<VideoFormData>({
     defaultValues: {

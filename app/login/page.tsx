@@ -166,38 +166,39 @@ export default function Login() {
                       placeholder="Enter your email"
                       className="w-full px-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all"
                     />
-                  </div>
+                  </label>
+                </div>
 
-                  <div className="space-y-2">
-                    <label className="block">
-                      <span className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
-                        Password
-                      </span>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          id="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                          placeholder="Enter your password"
-                          className="w-full px-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all pr-12"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        >
-                          {showPassword ? (
-                            <EyeOff className="w-5 h-5" />
-                          ) : (
-                            <Eye className="w-5 h-5" />
-                          )}
-                        </button>
-                      </div>
+                <div className="space-y-2">
+                  <label className="block">
+                    <span className="text-sm font-medium mb-2 flex items-center gap-2">
+                      <Lock className="w-4 h-4" />
+                      Password
+                    </span>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="Enter your password"
+                        className="w-full px-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 outline-none transition-all pr-12"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
                     </div>
-                  </div>
+                  </label>
+                </div>
 
                   {/* Remember Me & Forgot Password */}
                   <div className="flex items-center justify-between">

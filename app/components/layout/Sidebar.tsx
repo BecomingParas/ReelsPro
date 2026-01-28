@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
 import {
@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type SidebarUser = {
@@ -29,14 +29,10 @@ type SidebarUser = {
 export default function Sidebar() {
   const pathname = usePathname(); // This replaces useLocation()
   const { t } = useLanguage();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [usersList, setUsersList] = useState<SidebarUser[]>([]);
 
   const selfId = session?.user?.id;
-  const fallbackInitial = useMemo(() => {
-    const v = (session?.user?.name || session?.user?.email || "U").trim();
-    return v.slice(0, 1).toUpperCase();
-  }, [session?.user?.email, session?.user?.name]);
 
   useEffect(() => {
     let cancelled = false;

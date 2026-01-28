@@ -1,7 +1,7 @@
 "use client";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, PlusCircle, MessageSquare, User, Search, Bell, Sparkles, Film, Camera } from "lucide-react";
+import { Home, Compass, PlusCircle, User, Bell, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";

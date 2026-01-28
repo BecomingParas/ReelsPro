@@ -16,8 +16,10 @@ export default function FileUpload({
   onSuccess,
   onProgress,
   fileType = "image",
-  ref,
+  ref: _ref,
 }: FileUploadProps) {
+  void _ref;
+
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);

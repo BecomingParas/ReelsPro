@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 
 export default function SettingsPage() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [activeTab, setActiveTab] = useState("general");
 
@@ -282,57 +282,63 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {(settingsOptions[activeTab as keyof typeof settingsOptions] || []).map((option, index) => (
-                    <div
-                      key={index}
-                      className="group p-6 rounded-xl bg-muted/20 hover:bg-muted/30 border border-border/50 hover:border-pink-500/30 transition-all duration-300"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-start gap-4">
-                          <div className={`p-3 rounded-xl ${
-                            option.active 
-                              ? "bg-gradient-to-r from-pink-500/20 to-purple-600/20"
-                              : "bg-muted/50"
-                          }`}>
-                            <option.icon className={`w-6 h-6 ${
-                              option.active ? "text-pink-500" : "text-muted-foreground"
-                            }`} />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold mb-1">{option.title}</h3>
-                            <p className="text-sm text-muted-foreground">{option.description}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-4">
-                          <span className="text-sm text-muted-foreground">{option.value}</span>
-                          
-                          {option.toggle ? (
-                            <button className="relative w-12 h-6 rounded-full bg-muted border border-border transition-all duration-300">
-                              <div className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-300 ${
-                                option.value === "Enabled"
-                                  ? "left-7 bg-gradient-to-r from-pink-500 to-purple-600"
-                                  : "left-1 bg-muted-foreground"
+                  {(settingsOptions[activeTab as keyof typeof settingsOptions] || []).map((option, index) => {
+                    const isActive = "active" in option && option.active;
+                    const hasToggle = "toggle" in option && option.toggle;
+                    const hasAction = "action" in option && typeof option.action === "function";
+
+                    return (
+                      <div
+                        key={index}
+                        className="group p-6 rounded-xl bg-muted/20 hover:bg-muted/30 border border-border/50 hover:border-pink-500/30 transition-all duration-300"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-start gap-4">
+                            <div className={`p-3 rounded-xl ${
+                              isActive
+                                ? "bg-gradient-to-r from-pink-500/20 to-purple-600/20"
+                                : "bg-muted/50"
+                            }`}>
+                              <option.icon className={`w-6 h-6 ${
+                                isActive ? "text-pink-500" : "text-muted-foreground"
                               }`} />
-                            </button>
-                          ) : option.action ? (
-                            <button
-                              onClick={option.action}
-                              className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
-                            >
-                              {option.active ? (
-                                <CheckCircle className="w-5 h-5 text-green-500" />
-                              ) : (
-                                <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                              )}
-                            </button>
-                          ) : (
-                            <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                          )}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold mb-1">{option.title}</h3>
+                              <p className="text-sm text-muted-foreground">{option.description}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm text-muted-foreground">{option.value}</span>
+                            
+                            {hasToggle ? (
+                              <button className="relative w-12 h-6 rounded-full bg-muted border border-border transition-all duration-300">
+                                <div className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-300 ${
+                                  option.value === "Enabled"
+                                    ? "left-7 bg-gradient-to-r from-pink-500 to-purple-600"
+                                    : "left-1 bg-muted-foreground"
+                                }`} />
+                              </button>
+                            ) : hasAction ? (
+                              <button
+                                onClick={option.action}
+                                className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
+                              >
+                                {isActive ? (
+                                  <CheckCircle className="w-5 h-5 text-green-500" />
+                                ) : (
+                                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                                )}
+                              </button>
+                            ) : (
+                              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Theme Preview */}

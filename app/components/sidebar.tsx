@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
-import { cn } from "@/app/lib/utils";
 import {
   Home,
   Compass,
@@ -14,30 +13,24 @@ import {
   User,
   Settings,
   Film,
-  Sparkles,
   TrendingUp,
   Music,
   Gamepad2,
   Camera,
   Lightbulb,
   Hash,
-  Plus,
   Bookmark,
   Heart,
   LogOut,
   MoreVertical,
   CheckCircle2,
-  Zap,
   Crown,
   Award,
-  Volume2,
-  Eye,
-  MapPin,
-  Globe,
   Search,
   Menu,
   X
 } from "lucide-react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -56,7 +49,7 @@ type SidebarUser = {
 export default function Sidebar() {
   const pathname = usePathname();
   const { t } = useLanguage();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [usersList, setUsersList] = useState<SidebarUser[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

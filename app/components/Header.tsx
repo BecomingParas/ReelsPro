@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { 
   Search, 
   Plus, 
@@ -20,25 +20,19 @@ import {
   Mic,
   Menu,
   X,
-  Heart,
   Bookmark,
-  Award,
   Volume2,
   Gamepad2,
   Music,
   Camera,
   Globe,
-  Zap,
-  Crown,
-  CheckCircle2,
-  MoreVertical
 } from "lucide-react";
 import { useNotification } from "./Notification";
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const { showNotification } = useNotification();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMobileMenu, setShowMobileMenu] = useState(false);

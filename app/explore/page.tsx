@@ -22,9 +22,7 @@ import {
   Hash,
   Music,
   Gamepad2,
-  Camera,
   Lightbulb,
-  Film,
   Plus,
   MoreVertical,
   CheckCircle2

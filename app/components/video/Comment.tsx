@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { X, Heart, Send, MoreHorizontal, MessageCircle, ThumbsUp, User, Sparkles, TrendingUp, Clock, Reply, Flag, Trash2, Edit, Check, XCircle } from "lucide-react";
-import { useLanguage } from "@/app/context/LanguageContext";
+import { X, Heart, Send, MoreHorizontal, MessageCircle, User, Sparkles, TrendingUp, Clock, Reply, Flag, Trash2, Edit, Check } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { cn } from "@/app/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
@@ -39,7 +37,7 @@ const mockComments: Comment[] = [
       verified: true,
       isCreator: true 
     },
-    text: "यो भिडियो धेरै राम्रो छ! सुन्दर दृश्य र अद्भुत संगीत 🎬🎶",
+    text: "यो भिडियो धेरै राम्रो छ! सुन्दर दृश्य र अद्भुत संगीत ",
     likes: 234,
     time: "2 घण्टा",
     isPinned: true,
@@ -47,14 +45,14 @@ const mockComments: Comment[] = [
       {
         id: "1-1",
         user: { name: "सीता देवी", username: "sita_devi", verified: true },
-        text: "@ram_bahadur सहमत! संगीतले त मन्त्र मुग्ध बनाइदियो 🙏✨",
+        text: "@ram_bahadur सहमत! संगीतले त मन्त्र मुग्ध बनाइदियो ",
         likes: 45,
         time: "1 घण्टा",
       },
       {
         id: "1-2",
         user: { name: "विद्या गुरुङ", username: "vidya_g" },
-        text: "धन्यवाद सर! तपाईंको समर्थनले प्रेरित गर्छ 🇳🇵❤️",
+        text: "धन्यवाद सर! तपाईंको समर्थनले प्रेरित गर्छ ",
         likes: 28,
         time: "45 मिनेट",
         isEdited: true,
@@ -68,14 +66,14 @@ const mockComments: Comment[] = [
       username: "krishna_pd",
       verified: true 
     },
-    text: "नेपाली संस्कृति र प्राकृतिक सुन्दरताको अद्भुत संयोजन 🇳🇵❤️",
+    text: "नेपाली संस्कृति र प्राकृतिक सुन्दरताको अद्भुत संयोजन ",
     likes: 456,
     time: "5 घण्टा",
     replies: [
       {
         id: "2-1",
         user: { name: "अन्जली शर्मा", username: "anjali_s" },
-        text: "हाम्रो देशको गर्व! 🏔️",
+        text: "हाम्रो देशको गर्व! ",
         likes: 89,
         time: "3 घण्टा",
       },
@@ -88,7 +86,7 @@ const mockComments: Comment[] = [
       username: "geeta_k",
       isCreator: true 
     },
-    text: "कति राम्रो! कृपया location share गर्नुहोस्, म पनि त्यहाँ जान चाहन्छु 🌄",
+    text: "कति राम्रो! कृपया location share गर्नुहोस्, म पनि त्यहाँ जान चाहन्छु ",
     likes: 189,
     time: "8 घण्टा",
   },
@@ -99,7 +97,7 @@ const mockComments: Comment[] = [
       username: "hari_maya",
       verified: true 
     },
-    text: "Cinematography र editing बिल्कुल professional level को! 👏👏👏",
+    text: "Cinematography र editing बिल्कुल professional level को! ",
     likes: 312,
     time: "12 घण्टा",
     isEdited: true,
@@ -110,7 +108,7 @@ const mockComments: Comment[] = [
       name: "विष्णु प्रसाद", 
       username: "vishnu_p" 
     },
-    text: "यस्तो quality content चाहिन्छ नेपाली reels मा! Keep it up 💯🔥",
+    text: "यस्तो quality content चाहिन्छ नेपाली reels मा! Keep it up ",
     likes: 567,
     time: "1 दिन",
   },
@@ -120,13 +118,13 @@ const mockComments: Comment[] = [
       name: "सुनिता राई", 
       username: "sunita_rai" 
     },
-    text: "मैले यो भिडियो 10 पटक हेरिसके! Addicted भैसकेको छु 😅",
+    text: "मैले यो भिडियो 10 पटक हेरिसके! Addicted भैसकेको छु ",
     likes: 123,
     time: "2 दिन",
   },
 ];
 
-export default function CommentSheet({ isOpen, onClose, videoId }: CommentSheetProps) {
+export default function CommentSheet({ isOpen, onClose, videoId: _videoId }: CommentSheetProps) {
   const [commentText, setCommentText] = useState("");
   const [localComments, setLocalComments] = useState<Comment[]>(mockComments);
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set());
@@ -134,9 +132,10 @@ export default function CommentSheet({ isOpen, onClose, videoId }: CommentSheetP
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "top">("all");
-  const { t } = useLanguage();
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
+
+  void _videoId;
 
   useEffect(() => {
     if (isOpen) {
@@ -561,7 +560,7 @@ export default function CommentSheet({ isOpen, onClose, videoId }: CommentSheetP
               <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500/10 to-purple-600/10 flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-8 h-8 text-gray-400" />
               </div>
-              <p className="text-gray-400">You've reached the end of comments</p>
+              <p className="text-gray-400">You&apos;ve reached the end of comments</p>
               <p className="text-sm text-gray-500 mt-1">Share your thoughts above!</p>
             </div>
           </div>

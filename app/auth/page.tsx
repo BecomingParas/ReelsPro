@@ -13,7 +13,6 @@ import {
   ArrowLeft,
   Sparkles,
   CheckCircle2,
-  AlertCircle,
   Facebook,
   Twitter,
   Github,
@@ -29,6 +28,7 @@ import {
   MessageCircle,
   Heart
 } from "lucide-react";
+
 import { useLanguage } from "../context/LanguageContext";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
