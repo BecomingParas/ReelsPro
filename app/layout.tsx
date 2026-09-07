@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ne" dir="ltr" suppressHydrationWarning className="bg-background">
+    <html lang="ne" dir="ltr" className="bg-background light">
       <body className="font-sans antialiased bg-background text-foreground">
         <AppShell>{children}</AppShell>
       </body>

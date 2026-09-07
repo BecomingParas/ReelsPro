@@ -46,7 +46,7 @@ export default function Sidebar() {
 
   const renderItem = (item: typeof menuItems[number], index: number) => {
     const Icon = item.icon;
-    const active = item.href !== "/" ? pathname.startsWith(item.href) : pathname === "/";
+    const active = item.id === "home" ? pathname === "/" : item.href !== "/" && pathname.startsWith(item.href);
     return (
       <motion.div key={item.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.035, duration: 0.35 }}>
         <Link href={item.href} aria-current={active ? "page" : undefined} className={cn("group relative flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors", active ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10" : "text-muted-foreground hover:bg-muted hover:text-foreground")}>
