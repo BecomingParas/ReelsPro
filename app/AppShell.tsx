@@ -12,10 +12,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <Providers>
       <LanguageProvider>
         <div className="min-h-screen bg-background">
-          <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-            <div className="absolute -left-32 top-16 size-96 rounded-full bg-primary/10 blur-3xl" />
-            <div className="absolute -right-40 bottom-0 size-[28rem] rounded-full bg-secondary/5 blur-3xl" />
-          </div>
+          <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,hsl(var(--primary)/.08),transparent_28%),radial-gradient(circle_at_90%_100%,hsl(var(--secondary)/.05),transparent_24%)]" aria-hidden="true" />
           <div className="relative z-10 flex min-h-screen">
             <Sidebar />
             <div className="flex min-w-0 flex-1 flex-col">

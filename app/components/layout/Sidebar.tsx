@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Settings, Sparkles } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Settings, Sparkles, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -33,40 +34,46 @@ export default function Sidebar() {
     { id: "home", icon: Home, label: t("home") || "Home", href: "/" },
     { id: "explore", icon: Compass, label: t("explore") || "Explore", href: "/explore" },
     { id: "friends", icon: Users, label: t("friends") || "Friends", href: "/" },
-    { id: "live", icon: Tv, label: t("live") || "Live", href: "/", badge: "NEW" },
+    { id: "live", icon: Tv, label: t("live") || "Live", href: "/", badge: "LIVE" },
     { id: "messages", icon: MessageSquare, label: t("messages") || "Messages", href: "/", count: 3 },
     { id: "notifications", icon: Bell, label: t("notifications") || "Notifications", href: "/" },
+  ];
+  const libraryItems = [
     { id: "upload", icon: Upload, label: t("upload") || "Upload", href: "/upload" },
     { id: "profile", icon: User, label: t("profile") || "Profile", href: "/profile" },
     { id: "settings", icon: Settings, label: t("settings") || "Settings", href: "/settings" },
   ];
 
+  const renderItem = (item: typeof menuItems[number], index: number) => {
+    const Icon = item.icon;
+    const active = item.href !== "/" ? pathname.startsWith(item.href) : pathname === "/";
+    return (
+      <motion.div key={item.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.035, duration: 0.35 }}>
+        <Link href={item.href} aria-current={active ? "page" : undefined} className={cn("group relative flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors", active ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10" : "text-muted-foreground hover:bg-muted hover:text-foreground")}>
+          <span className="flex items-center gap-3"><Icon className="size-[18px]" />{item.label}</span>
+          {item.badge ? <span className={cn("rounded-sm px-1.5 py-0.5 text-[9px] font-black tracking-wider", active ? "bg-primary-foreground/15" : "bg-primary/15 text-primary")}>{item.badge}</span> : item.count ? <span className={cn("flex size-5 items-center justify-center rounded-md text-[10px]", active ? "bg-primary-foreground/15" : "bg-secondary text-secondary-foreground")}>{item.count}</span> : null}
+        </Link>
+      </motion.div>
+    );
+  };
+
   return (
-    <aside className="glass hidden w-64 shrink-0 flex-col border-y-0 border-l-0 md:flex">
-      <Link href="/" className="flex items-center gap-3 border-b border-border/70 px-6 py-5">
-        <span className="gradient-bg flex size-10 items-center justify-center rounded-2xl text-sm font-black text-primary-foreground shadow-lg">RN</span>
-        <span className="text-lg font-bold tracking-tight">Reels<span className="gradient-text">Nepal</span></span>
+    <aside className="glass hidden w-[17.5rem] shrink-0 flex-col border-y-0 border-l-0 md:flex">
+      <Link href="/" className="motion-sheen flex items-center gap-3 border-b border-border/70 px-6 py-6">
+        <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground shadow-lg shadow-primary/20">RN</span>
+        <span className="text-lg font-black tracking-tight">Reels<span className="text-primary">Nepal</span></span>
       </Link>
-      <nav className="flex-1 overflow-y-auto px-3 py-5">
-        <p className="px-3 pb-3 text-[10px] font-bold uppercase tracking-[.22em] text-muted-foreground">Discover</p>
-        <div className="flex flex-col gap-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const active = item.href !== "/" ? pathname.startsWith(item.href) : pathname === "/";
-            return <Link key={item.id} href={item.href} className={cn("group flex items-center justify-between rounded-xl px-3 py-3 text-sm font-medium transition-colors", active ? "bg-primary/15 text-foreground shadow-[inset_3px_0_0_hsl(var(--primary))]" : "text-muted-foreground hover:bg-muted/70 hover:text-foreground")}>
-              <span className="flex items-center gap-3"><Icon className={cn("size-5", active && "text-primary")} />{item.label}</span>
-              {item.badge ? <span className="rounded-full bg-accent/20 px-2 py-0.5 text-[9px] font-bold text-accent">{item.badge}</span> : item.count ? <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">{item.count}</span> : null}
-            </Link>;
-          })}
-        </div>
+      <nav className="flex-1 overflow-y-auto px-4 py-6">
+        <p className="px-3 pb-3 text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Main menu</p>
+        <div className="flex flex-col gap-1">{menuItems.map(renderItem)}</div>
         <div className="my-6 h-px bg-border/70" />
-        <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-muted-foreground">Creators</p><Sparkles className="size-3 text-secondary" /></div>
-        <div className="flex flex-col gap-1">
-          {usersList.slice(0, 5).map((u) => <div key={u.id} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-muted/70"><Avatar className="size-8"><AvatarImage src={u.avatar || ""} alt={u.name} /><AvatarFallback>{u.name.slice(0, 1).toUpperCase()}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate text-xs font-semibold">{u.name}</p><p className="truncate text-[11px] text-muted-foreground">@{u.username}</p></div></div>)}
-          {!usersList.length && <p className="px-3 text-xs text-muted-foreground">Find people to follow</p>}
-        </div>
+        <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Your space</p><Sparkles className="size-3 text-secondary" /></div>
+        <div className="flex flex-col gap-1">{libraryItems.map((item, index) => renderItem(item, index + menuItems.length))}</div>
+        <div className="my-6 h-px bg-border/70" />
+        <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Creators</p><ArrowUpRight className="size-3 text-muted-foreground" /></div>
+        <div className="flex flex-col gap-1">{usersList.slice(0, 4).map((u) => <div key={u.id} className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-muted"><Avatar className="size-8"><AvatarImage src={u.avatar || ""} alt={u.name} /><AvatarFallback>{u.name.slice(0, 1).toUpperCase()}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate text-xs font-semibold">{u.name}</p><p className="truncate text-[11px] text-muted-foreground">@{u.username}</p></div></div>)}{!usersList.length && <p className="px-3 text-xs text-muted-foreground">Find people to follow</p>}</div>
       </nav>
-      <div className="border-t border-border/70 p-4"><Link href="/upload" className="gradient-bg flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-primary-foreground glow-sm"><Upload className="size-4" />Create a reel</Link></div>
+      <div className="border-t border-border/70 p-4"><Link href="/upload" className="group flex items-center justify-between rounded-lg bg-secondary px-4 py-3 text-sm font-black text-secondary-foreground transition-transform hover:-translate-y-0.5"><span className="flex items-center gap-2"><Upload className="size-4" />Create a reel</span><ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></Link></div>
     </aside>
   );
 }
