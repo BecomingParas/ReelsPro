@@ -59,11 +59,11 @@ export default function Sidebar() {
 
   return (
     <aside className="glass hidden w-[17.5rem] shrink-0 flex-col border-y-0 border-l-0 md:flex">
-      <Link href="/" className="motion-sheen flex items-center gap-3 border-b border-border/70 px-6 py-6">
-        <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground shadow-lg shadow-primary/20">RN</span>
-        <span className="text-lg font-black tracking-tight">Reels<span className="text-primary">Nepal</span></span>
+      <Link href="/" className="motion-sheen flex items-center gap-3 border-b border-border/70 px-6 py-5">
+        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gemini_Generated_Image_c7sybnc7sybnc7sy-mouWb4mB74FemqGXGwxwE3kaVZUU9v.jpg" alt="ReelsNepal" className="size-11 rounded-xl object-cover object-center" />
+        <span className="text-lg font-black tracking-tight">reels<span className="text-secondary">Nepal</span></span>
       </Link>
-      <nav className="flex-1 overflow-y-auto px-4 py-6">
+      <nav className="scrollbar-hide min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6">
         <p className="px-3 pb-3 text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Main menu</p>
         <div className="flex flex-col gap-1">{menuItems.map(renderItem)}</div>
         <div className="my-6 h-px bg-border/70" />
