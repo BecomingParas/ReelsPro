@@ -11,20 +11,16 @@ export default function AppShell({ children }: { children: ReactNode }) {
   return (
     <Providers>
       <LanguageProvider>
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        </div>
-
-        <div className="flex h-screen relative z-10">
-          <Sidebar />
-
-          <div className="flex-1 min-w-0 flex flex-col transition-all duration-300">
-            <TopBar />
-            <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
+        <div className="min-h-screen bg-background">
+          <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,hsl(var(--primary)/.08),transparent_28%),radial-gradient(circle_at_90%_100%,hsl(var(--secondary)/.05),transparent_24%)]" aria-hidden="true" />
+          <div className="relative z-10 flex min-h-screen">
+            <Sidebar />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <TopBar />
+              <main className="min-w-0 flex-1 overflow-y-auto pb-20 md:pb-0">{children}</main>
+            </div>
+            <BottomNav />
           </div>
-
-          <BottomNav />
         </div>
       </LanguageProvider>
     </Providers>

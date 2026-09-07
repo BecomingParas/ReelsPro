@@ -2,140 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ======================================================
-   Design Tokens — Light (default)
-   ====================================================== */
 :root {
-  /* Base colors */
-  --background: 330 100% 98%;
-  --foreground: 222.2 47.4% 11.2%;
-
-  /* Card / surface */
+  --background: 210 40% 97%;
+  --foreground: 216 48% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 47.4% 11.2%;
-
-  /* Borders & inputs */
-  --border: 330 30% 90%;
-  --input: 330 30% 90%;
-
-  /* Ring */
-  --ring: 345 82% 55%;
-
-  /* Primary */
-  --primary: 345 82% 55%;
-  --primary-foreground: 0 0% 100%;
-
-  /* Secondary */
-  --secondary: 330 40% 96%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-
-  /* Muted */
-  --muted: 330 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-
-  /* Accent */
-  --accent: 330 40% 96%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-
-  /* Popover */
+  --card-foreground: 216 48% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 47.4% 11.2%;
-
-  /* Sidebar */
-  --sidebar: 0 0% 100%;
-  --sidebar-foreground: 222.2 47.4% 11.2%;
-
-  /* Status */
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 100%;
-
-  /* Radius */
-  --radius: 0.75rem;
-}
-
-/* ======================================================
-   Dark Mode Tokens
-   ====================================================== */
-.dark {
-  --background: 224 71% 4%;
-  --foreground: 213 31% 91%;
-
-  --card: 224 71% 4%;
-  --card-foreground: 213 31% 91%;
-
-  --border: 216 34% 17%;
-  --input: 216 34% 17%;
-
-  --ring: 346 78% 58%;
-
-  --primary: 244 75% 57%;
+  --popover-foreground: 216 48% 10%;
+  --primary: 199 100% 38%;
   --primary-foreground: 0 0% 100%;
-
-  --secondary: 223 47% 11%;
-  --secondary-foreground: 213 31% 91%;
-
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 56.9%;
-
-  --accent: 223 47% 11%;
-  --accent-foreground: 213 31% 91%;
-
-  --popover: 224 71% 4%;
-  --popover-foreground: 213 31% 91%;
-
-  --sidebar: 224 71% 4%;
-  --sidebar-foreground: 213 31% 91%;
-
-  --destructive: 0 62.8% 50.6%;
+  --secondary: 25 100% 50%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 26% 91%;
+  --muted-foreground: 216 18% 40%;
+  --accent: 216 48% 10%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 25 100% 50%;
   --destructive-foreground: 0 0% 100%;
+  --border: 213 24% 82%;
+  --input: 213 24% 82%;
+  --ring: 199 100% 38%;
+  --radius: 0.875rem;
 }
-@layer base {
-  * {
-    @apply border-border;
-  }
 
+.dark {
+  --background: 216 48% 7%;
+  --foreground: 210 40% 97%;
+  --card: 216 42% 11%;
+  --card-foreground: 210 40% 97%;
+  --popover: 216 42% 11%;
+  --popover-foreground: 210 40% 97%;
+  --primary: 199 100% 45%;
+  --primary-foreground: 216 48% 7%;
+  --secondary: 25 100% 55%;
+  --secondary-foreground: 216 48% 7%;
+  --muted: 216 30% 16%;
+  --muted-foreground: 213 18% 68%;
+  --accent: 210 40% 97%;
+  --accent-foreground: 216 48% 7%;
+  --destructive: 25 100% 55%;
+  --destructive-foreground: 216 48% 7%;
+  --border: 213 28% 24%;
+  --input: 213 28% 24%;
+  --ring: 199 100% 45%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { background: hsl(var(--background)); }
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
   }
+  button, a, input { -webkit-tap-highlight-color: transparent; }
 }
+
 @layer components {
-  .glass {
-    background: hsl(var(--background) / 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--border));
-  }
-
-  .gradient-border {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)) 0%,
-      hsl(270 70% 55%) 100%
-    );
-  }
-
-  .glow-sm {
-    box-shadow:
-      0 0 0 1px hsl(var(--primary) / 0.18),
-      0 12px 30px -16px hsl(var(--primary) / 0.45);
-  }
-
-  .gradient-bg {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)) 0%,
-      hsl(270 70% 55%) 100%
-    );
-  }
-
-  .gradient-text {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(270 70% 55%)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  .glass { @apply border border-border/70 bg-card/80 backdrop-blur-2xl; }
+  .glass-strong { @apply border border-border bg-card/95 backdrop-blur-2xl; }
+  .gradient-bg { background: hsl(var(--primary)); }
+  .gradient-text { color: hsl(var(--secondary)); }
+  .glow-sm { box-shadow: 0 0 0 1px hsl(var(--primary) / .18), 0 16px 40px -18px hsl(var(--primary) / .7); }
+  .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  .scrollbar-hide { scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .motion-sheen { position: relative; overflow: hidden; }
+  .motion-sheen::after { content: ""; position: absolute; inset: 0; width: 35%; background: linear-gradient(100deg, transparent, hsl(var(--accent) / .12), transparent); transform: translateX(-140%); animation: sheen 5s cubic-bezier(.2,.7,.2,1) infinite; pointer-events: none; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+@keyframes sheen { 0%, 55% { transform: translateX(-140%); } 100% { transform: translateX(420%); } }
+@keyframes heart-burst { 0% { transform: scale(.4); opacity: 0; } 40% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
+.animate-heart-burst { animation: heart-burst .8s ease-out forwards; }
+@keyframes slide-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-slide-up { animation: slide-up .45s ease-out both; }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 5s linear infinite; }
+
+:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 3px; }
+::selection { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+.striped { background-image: repeating-linear-gradient(135deg, hsl(var(--border) / .22) 0 1px, transparent 1px 7px); }
