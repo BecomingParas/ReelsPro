@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Settings, Sparkles, ArrowUpRight, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Settings, Sparkles, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -32,17 +32,19 @@ export default function Sidebar() {
   }, [selfId]);
 
   const menuItems = [
-    { id: "home", icon: Home, label: t("home") || "Home", href: "/" },
+    { id: "home", icon: Home, label: "For You", href: "/" },
     { id: "explore", icon: Compass, label: t("explore") || "Explore", href: "/explore" },
+    { id: "following", icon: Users, label: "Following", href: "/" },
     { id: "friends", icon: Users, label: t("friends") || "Friends", href: "/" },
-    { id: "live", icon: Tv, label: t("live") || "Live", href: "/", badge: "LIVE" },
+    { id: "dramas", icon: Film, label: "Short dramas", href: "/" },
+    { id: "live", icon: Tv, label: t("live") || "LIVE", href: "/", badge: "LIVE" },
     { id: "messages", icon: MessageSquare, label: t("messages") || "Messages", href: "/", count: 3 },
-    { id: "notifications", icon: Bell, label: t("notifications") || "Notifications", href: "/" },
+    { id: "notifications", icon: Bell, label: t("notifications") || "Activity", href: "/" },
   ];
   const libraryItems = [
     { id: "upload", icon: Upload, label: t("upload") || "Upload", href: "/upload" },
     { id: "profile", icon: User, label: t("profile") || "Profile", href: "/profile" },
-    { id: "settings", icon: Settings, label: t("settings") || "Settings", href: "/settings" },
+    { id: "more", icon: MoreHorizontal, label: "More", href: "/settings" },
   ];
 
   const renderItem = (item: typeof menuItems[number], index: number) => {
@@ -50,7 +52,7 @@ export default function Sidebar() {
     const active = item.id === "home" ? pathname === "/" : item.href !== "/" && pathname.startsWith(item.href);
     return (
       <motion.div key={item.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.035, duration: 0.35 }}>
-        <Link href={item.href} aria-current={active ? "page" : undefined} title={collapsed ? item.label : undefined} className={cn("group relative flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors", collapsed && "justify-center px-2", active ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10" : "text-muted-foreground hover:bg-muted hover:text-foreground")}>
+        <Link href={item.href} aria-current={active ? "page" : undefined} title={collapsed ? item.label : undefined} className={cn("group relative flex items-center justify-between rounded-md px-3 py-3 text-[15px] font-semibold transition-colors", collapsed && "justify-center px-2", active ? "bg-muted text-foreground" : "text-foreground/80 hover:bg-muted/70 hover:text-foreground")}>
           <span className="flex items-center gap-3"><Icon className="size-[18px]" />{!collapsed && item.label}</span>
           {item.badge ? <span className={cn("rounded-sm px-1.5 py-0.5 text-[9px] font-black tracking-wider", active ? "bg-primary-foreground/15" : "bg-primary/15 text-primary")}>{item.badge}</span> : item.count ? <span className={cn("flex size-5 items-center justify-center rounded-md text-[10px]", active ? "bg-primary-foreground/15" : "bg-secondary text-secondary-foreground")}>{item.count}</span> : null}
         </Link>
@@ -69,19 +71,21 @@ export default function Sidebar() {
           {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
         </button>
       </div>
-      <nav className="scrollbar-hide min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6">
-        {!collapsed && <p className="px-3 pb-3 text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Main menu</p>}
+      <nav className="scrollbar-hide min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-5">
+        {!collapsed && <div className="mb-5 flex items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-sm text-muted-foreground"><Search className="size-5" /><span>Search</span></div>}
+        {!collapsed && <p className="px-3 pb-3 text-[11px] font-bold uppercase tracking-[.12em] text-muted-foreground">Main menu</p>}
         <div className="flex flex-col gap-1">{menuItems.map(renderItem)}</div>
         <div className="my-6 h-px bg-border/70" />
         {!collapsed && <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Your space</p><Sparkles className="size-3 text-secondary" /></div>}
         <div className="flex flex-col gap-1">{libraryItems.map((item, index) => renderItem(item, index + menuItems.length))}</div>
         {!collapsed && <>
-          <div className="my-6 h-px bg-border/70" />
-          <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Creators</p><ArrowUpRight className="size-3 text-muted-foreground" /></div>
+          <div className="my-5 h-px bg-border/70" />
+          <div className="flex items-center justify-between px-3 pb-3"><p className="text-[11px] font-bold text-muted-foreground">Following accounts</p><ArrowUpRight className="size-3 text-muted-foreground" /></div>
           <div className="flex flex-col gap-1">{usersList.slice(0, 4).map((u) => <div key={u.id} className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-muted"><Avatar className="size-8"><AvatarImage src={u.avatar || ""} alt={u.name} /><AvatarFallback>{u.name.slice(0, 1).toUpperCase()}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate text-xs font-semibold">{u.name}</p><p className="truncate text-[11px] text-muted-foreground">@{u.username}</p></div></div>)}{!usersList.length && <p className="px-3 text-xs text-muted-foreground">Find people to follow</p>}</div>
         </>}
       </nav>
-      <div className="border-t border-border/70 p-4"><Link href="/upload" title={collapsed ? "Create a reel" : undefined} className={cn("group flex items-center justify-between rounded-lg bg-secondary py-3 text-sm font-black text-secondary-foreground transition-transform hover:-translate-y-0.5", collapsed ? "justify-center px-2" : "px-4")}><span className="flex items-center gap-2"><Upload className="size-4" />{!collapsed && "Create a reel"}</span>{!collapsed && <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}</Link></div>
+      {!collapsed && <div className="border-t border-border/70 px-4 py-4 text-xs font-semibold leading-6 text-muted-foreground"><p>Company</p><p>Program</p><p>Terms & Policies</p><p>© 2026 ReelsNepal</p></div>}
+      <div className="border-t border-border/70 p-3"><Link href="/upload" title={collapsed ? "Create a reel" : undefined} className={cn("group flex items-center justify-between rounded-md bg-secondary py-3 text-sm font-black text-secondary-foreground transition-transform hover:-translate-y-0.5", collapsed ? "justify-center px-2" : "px-4")}><span className="flex items-center gap-2"><Upload className="size-4" />{!collapsed && "Upload"}</span>{!collapsed && <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}</Link></div>
     </aside>
   );
 }
