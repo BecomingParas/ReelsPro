@@ -4,10 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Sparkles, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 export default function Sidebar() {
   const pathname = usePathname();
   const { t } = useLanguage();
@@ -58,7 +57,6 @@ export default function Sidebar() {
         {!collapsed && <p className="px-3 pb-3 text-[11px] font-bold uppercase tracking-[.12em] text-muted-foreground">Main menu</p>}
         <div className="flex flex-col gap-1">{menuItems.map(renderItem)}</div>
         <div className="my-6 h-px bg-border/70" />
-        {!collapsed && <div className="flex items-center justify-between px-3 pb-3"><p className="text-[10px] font-black uppercase tracking-[.2em] text-muted-foreground">Your space</p><Sparkles className="size-3 text-secondary" /></div>}
         <div className="flex flex-col gap-1">{libraryItems.map((item, index) => renderItem(item, index + menuItems.length))}</div>
 
       </nav>
