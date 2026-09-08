@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Settings, Sparkles, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, Sparkles, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
