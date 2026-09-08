@@ -27,7 +27,7 @@ export default function Sidebar() {
     const Icon = item.icon;
     const active = item.id === "home" ? pathname === "/" : item.href !== "/" && pathname.startsWith(item.href);
     return (
-      <motion.div key={item.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.035, duration: 0.35 }}>
+      <motion.div key={item.id} initial={false}>
         <Link href={item.href} aria-current={active ? "page" : undefined} title={collapsed ? item.label : undefined} className={cn("group relative flex items-center justify-between rounded-md px-3 py-3 text-[15px] font-semibold transition-colors", collapsed && "justify-center px-2", active ? "bg-muted text-foreground" : "text-foreground/80 hover:bg-muted/70 hover:text-foreground")}>
           <span className="flex items-center gap-3"><Icon className="size-[18px]" />{!collapsed && item.label}</span>
           {item.badge ? <span className={cn("rounded-sm px-1.5 py-0.5 text-[9px] font-black tracking-wider", active ? "bg-primary-foreground/15" : "bg-primary/15 text-primary")}>{item.badge}</span> : item.count ? <span className={cn("flex size-5 items-center justify-center rounded-md text-[10px]", active ? "bg-primary-foreground/15" : "bg-secondary text-secondary-foreground")}>{item.count}</span> : null}
@@ -43,9 +43,9 @@ export default function Sidebar() {
           <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gemini_Generated_Image_c7sybnc7sybnc7sy-mouWb4mB74FemqGXGwxwE3kaVZUU9v.jpg" alt="ReelsNepal" className="size-11 shrink-0 rounded-xl object-cover object-center" />
           {!collapsed && <span className="text-lg font-black tracking-tight">reels<span className="text-secondary">Nepal</span></span>}
         </Link>
-        <button type="button" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} title={collapsed ? "Expand sidebar" : "Collapse sidebar"} className={cn("absolute flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground", collapsed ? "-right-3 top-7 bg-card shadow-sm" : "right-3 top-7")}>
-          {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
-        </button>
+        {!collapsed && <button type="button" onClick={() => setCollapsed(true)} aria-label="Collapse sidebar" title="Collapse sidebar" className="absolute right-3 top-7 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          <PanelLeftClose className="size-4" />
+        </button>}
       </div>
       <nav className="scrollbar-hide min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-5">
         {!collapsed && <div className="mb-5 flex items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-sm text-muted-foreground"><Search className="size-5" /><span>Search</span></div>}
@@ -53,6 +53,7 @@ export default function Sidebar() {
 
       </nav>
       {!collapsed && <div className="border-t border-border/70 px-4 py-4 text-xs font-semibold leading-6 text-muted-foreground"><p>Company</p><p>Program</p><p>Terms & Policies</p><p>© 2026 ReelsNepal</p></div>}
+      {collapsed && <div className="mt-auto flex justify-center border-t border-border/70 p-3"><button type="button" onClick={() => setCollapsed(false)} aria-label="Expand sidebar" title="Expand sidebar" className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"><PanelLeftOpen className="size-4" /></button></div>}
     </aside>
   );
 }
