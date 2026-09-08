@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, Upload, User, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, MoreHorizontal, Film } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, Film } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 export default function Sidebar() {
@@ -21,11 +21,6 @@ export default function Sidebar() {
     { id: "live", icon: Tv, label: t("live") || "LIVE", href: "/", badge: "LIVE" },
     { id: "messages", icon: MessageSquare, label: t("messages") || "Messages", href: "/", count: 3 },
     { id: "notifications", icon: Bell, label: t("notifications") || "Activity", href: "/" },
-  ];
-  const libraryItems = [
-    { id: "upload", icon: Upload, label: t("upload") || "Upload", href: "/upload" },
-    { id: "profile", icon: User, label: t("profile") || "Profile", href: "/profile" },
-    { id: "more", icon: MoreHorizontal, label: "More", href: "/settings" },
   ];
 
   const renderItem = (item: typeof menuItems[number], index: number) => {
@@ -54,14 +49,10 @@ export default function Sidebar() {
       </div>
       <nav className="scrollbar-hide min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-5">
         {!collapsed && <div className="mb-5 flex items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-sm text-muted-foreground"><Search className="size-5" /><span>Search</span></div>}
-        {!collapsed && <p className="px-3 pb-3 text-[11px] font-bold uppercase tracking-[.12em] text-muted-foreground">Main menu</p>}
         <div className="flex flex-col gap-1">{menuItems.map(renderItem)}</div>
-        <div className="my-6 h-px bg-border/70" />
-        <div className="flex flex-col gap-1">{libraryItems.map((item, index) => renderItem(item, index + menuItems.length))}</div>
 
       </nav>
       {!collapsed && <div className="border-t border-border/70 px-4 py-4 text-xs font-semibold leading-6 text-muted-foreground"><p>Company</p><p>Program</p><p>Terms & Policies</p><p>© 2026 ReelsNepal</p></div>}
-      <div className="border-t border-border/70 p-3"><Link href="/upload" title={collapsed ? "Create a reel" : undefined} className={cn("group flex items-center justify-between rounded-md bg-secondary py-3 text-sm font-black text-secondary-foreground transition-transform hover:-translate-y-0.5", collapsed ? "justify-center px-2" : "px-4")}><span className="flex items-center gap-2"><Upload className="size-4" />{!collapsed && "Upload"}</span>{!collapsed && <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}</Link></div>
     </aside>
   );
 }
