@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { cn } from "@/app/lib/utils";
-import { Home, Compass, Users, Tv, MessageSquare, Bell, ArrowUpRight, PanelLeftClose, PanelLeftOpen, Search, Film } from "lucide-react";
+import { Home, Compass, Users, Tv, MessageSquare, Bell, PanelLeftClose, PanelLeftOpen, Search, Film } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 export default function Sidebar() {
@@ -23,7 +23,7 @@ export default function Sidebar() {
     { id: "notifications", icon: Bell, label: t("notifications") || "Activity", href: "/" },
   ];
 
-  const renderItem = (item: typeof menuItems[number], index: number) => {
+  const renderItem = (item: typeof menuItems[number]) => {
     const Icon = item.icon;
     const active = item.id === "home" ? pathname === "/" : item.href !== "/" && pathname.startsWith(item.href);
     return (
